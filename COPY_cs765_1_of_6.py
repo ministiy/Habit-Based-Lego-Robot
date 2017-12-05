@@ -147,7 +147,8 @@ while True:
     rm.run_forever(speed_sp=rmv)
 
     #additional recording of data
-    print('left motor speed: %d' % lm.speed_sp)
+    if (it % 10 == 0):
+        print('left motor speed: %d' % lm.speed_sp)
 
     btn.process()  # Check for currently pressed buttons.
 
