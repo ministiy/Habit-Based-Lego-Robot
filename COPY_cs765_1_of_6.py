@@ -12,8 +12,8 @@ BIAS = 0.05
 SENSOR_GAIN = 1.0
 OUTPUT_GAIN = 1.0
 
-Leds.set_color(Leds.LEFT, Leds.BLUE)
-Leds.set_color(Leds.RIGHT, Leds.BLUE)
+Leds.set_color(Leds.LEFT, Leds.RED)
+Leds.set_color(Leds.RIGHT, Leds.RED)
 
 lm = LargeMotor('outB')
 rm = LargeMotor('outC')
