@@ -147,13 +147,13 @@ while True:
     rm.run_forever(speed_sp=rmv)
 
     #additional recording of data
-    print('left motor speed: %f' % lm._speed)
+    #print('left motor speed: %f' % lm._speed)
 
     btn.process()  # Check for currently pressed buttons.
 
     it_duration = time() - start_time
     sleep_duration = max(0.0, target_ips - it_duration)
-    sleep(sleep_duration)
+    sleep(sleep_duration)e
     if (it % 50 == 0):
         print('it dur: %f  (slept for %f)' % (time() - start_time, sleep_duration))
     start_time = time()
