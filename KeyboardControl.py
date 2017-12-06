@@ -79,8 +79,8 @@ while True:
         left()
     if k == 'd':
         right()
-    if k == 'f':
-        fire()
+#    if k == 'f':
+#        fire()
     if k == ' ':
         stop()
     if k == 'q':
