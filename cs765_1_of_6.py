@@ -4,7 +4,8 @@ from math import sin,cos
 from time import sleep,time
 import csv
 
-Sound.beep()
+# commented this out to reduce annoying beep
+#Sound.beep()
 
 MAX_SENSOR = 100.0 # percent
 MAX_MOTOR = 1000.0
