@@ -38,10 +38,10 @@ def getch():
 def forward():
     motor_left.reset()
     motor_right.reset()
-#    motor_left.run_forever(speed_sp=450)
+    motor_right.run_timed(speed_sp=450, time_sp=100)
     motor_left.run_timed(speed_sp=450,time_sp=100)
-#    motor_right.run_forever(speed_sp=450)
-    motor_right.run_timed(speed_sp=450,time_sp=100)
+
+
 
 
 # ==============================================
@@ -75,6 +75,7 @@ def stop():
 # ==============================================
 
 while True:
+    print("Program started")
     k = getch()
     print(k)
     if k == 'w':
