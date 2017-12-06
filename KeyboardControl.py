@@ -34,8 +34,10 @@ def getch():
 # ==============================================
 
 def forward():
-    motor_left.run_forever(speed_sp=450)
-    motor_right.run_forever(speed_sp=450)
+#    motor_left.run_forever(speed_sp=450)
+    motor_left.run_timed(time_sp=100)
+#    motor_right.run_forever(speed_sp=450)
+    motor_right.run_timed(time_sp=100)
 
 
 # ==============================================
