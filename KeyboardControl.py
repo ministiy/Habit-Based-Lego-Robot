@@ -62,8 +62,8 @@ def right():
 # ==============================================
 
 def stop():
-    motor_left.run_forever(speed_sp=0)
-    motor_right.run_forever(speed_sp=0)
+    motor_left.stop()
+    motor_right.stop()
 
 
 # ==============================================
@@ -81,7 +81,7 @@ while True:
         right()
 #    if k == 'f':
 #        fire()
-    if k == ' ':
+    if k == 'p':
         stop()
     if k == 'q':
         exit()
