@@ -144,12 +144,17 @@ while True :
     rm.run_forever(speed_sp = rmv)
 
     
-
+    # writing to a csv file called output.csv to store sensory-motor data where
+    #   lsv = left colour sensor value
+    #   rsv = right colour sensor value
+    #   luv = left ultraviolet sensor value
+    #   ruv = right ultraviolet sensor value
+    #   lmv = left motor value
+    #   rmv = right motor value
     with open('output.csv', 'a', newline="") as output_file:
         wr = csv.writer(output_file, delimiter = ',' , quoting=csv.QUOTE_ALL)
         wr.writerow([lsv, rsv, luv, ruv, lmv, rmv])
-        
-    #print("left motor speed: %d" % lm.speed_sp)
+
     btn.process() # Check for currently pressed buttons.
 
     it_duration = time()-start_time
