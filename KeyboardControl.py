@@ -11,6 +11,8 @@ from ev3dev.ev3 import *
 motor_left = LargeMotor('outB')
 motor_right = LargeMotor('outC')
 #motor_a = MediumMotor('outA')
+motor_left.reset()
+motor_right.reset()
 
 
 # ==============================================
@@ -34,6 +36,8 @@ def getch():
 # ==============================================
 
 def forward():
+    motor_left.reset()
+    motor_right.reset()
 #    motor_left.run_forever(speed_sp=450)
     motor_left.run_timed(speed_sp=450,time_sp=100)
 #    motor_right.run_forever(speed_sp=450)
