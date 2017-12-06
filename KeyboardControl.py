@@ -7,10 +7,10 @@
 import termios, tty, sys
 from ev3dev.ev3 import *
 
-# attach large motors to ports B and C, medium motor to port A
+# attach large motors to ports B and C
 motor_left = LargeMotor('outB')
 motor_right = LargeMotor('outC')
-#motor_a = MediumMotor('outA')
+
 motor_left.reset()
 motor_right.reset()
 
@@ -36,33 +36,28 @@ def getch():
 # ==============================================
 
 def forward():
-    motor_left.reset()
-    motor_right.reset()
     motor_right.run_timed(speed_sp=450, time_sp=100)
     motor_left.run_timed(speed_sp=450,time_sp=100)
-
-
-
 
 # ==============================================
 
 def back():
-    motor_left.run_forever(speed_sp=-450)
-    motor_right.run_forever(speed_sp=-450)
+    motor_right.run_timed(speed_sp=-450, time_sp=100)
+    motor_left.run_timed(speed_sp=-450, time_sp=100)
 
 
 # ==============================================
 
 def left():
-    motor_left.run_forever(speed_sp=-450)
-    motor_right.run_forever(speed_sp=450)
+    motor_right.run_timed(speed_sp=450, time_sp=100)
+    motor_left.run_timed(speed_sp=-450, time_sp=100)
 
 
 # ==============================================
 
 def right():
-    motor_left.run_forever(speed_sp=450)
-    motor_right.run_forever(speed_sp=-450)
+    motor_right.run_timed(speed_sp=-450, time_sp=100)
+    motor_left.run_timed(speed_sp=450, time_sp=100)
 
 
 # ==============================================
@@ -74,8 +69,9 @@ def stop():
 
 # ==============================================
 
+print("Program started")
+
 while True:
-    print("Program started")
     k = getch()
     print(k)
     if k == 'w':
