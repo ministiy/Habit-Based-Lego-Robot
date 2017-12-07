@@ -144,7 +144,7 @@ while True :
     lm.run_forever(speed_sp = lmv)
     rm.run_forever(speed_sp = rmv)
 	
-	writer.writeData()
+    writer.writeData()
 	
     btn.process() # Check for currently pressed buttons.
 
