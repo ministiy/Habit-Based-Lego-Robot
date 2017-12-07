@@ -9,7 +9,7 @@ class WriteCSV:
             wr = csv.writer(output_file, delimiter=',', quoting=csv.QUOTE_ALL)
             wr.writerow(header)
 
-        def writeData(self):
+"""   def writeData(self):
 		# writing to a csv file called output.csv to store sensory-motor data where
 			#   lsv = left colour sensor value
 			#   rsv = right colour sensor value
@@ -19,4 +19,4 @@ class WriteCSV:
 			#   rmv = right motor value
 		with open('output.csv', 'a', newline="") as output_file:
 			wr = csv.writer(output_file, delimiter = ',' , quoting=csv.QUOTE_ALL)
-			wr.writerow([lsv, rsv, luv, ruv, lmv, rmv])
+			wr.writerow([lsv, rsv, luv, ruv, lmv, rmv])"""
