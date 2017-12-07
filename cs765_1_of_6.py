@@ -161,5 +161,5 @@ try:
         start_time = time()
         
 finally:
-    writer.closeFile()
+    writer.closeFile(output_file)
 
