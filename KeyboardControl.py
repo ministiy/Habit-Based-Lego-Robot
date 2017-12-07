@@ -166,4 +166,4 @@ while True:
     with open('output.csv', 'a', newline="") as output_file:
         wr = csv.writer(output_file, delimiter=',', quoting=csv.QUOTE_ALL)
         wr.writerow([lsv, rsv, luv, ruv, lmv, rmv])
-    print('ls:%0.3f rs:%0.3f lu:%0.3f ru:%0.3f rs:%0.3f lm:%0.3f rm:%0.3f' % (lsv, rsv, luv, ruv, lmv, rmv))
+    print('ls:%0.3f rs:%0.3f lu:%0.3f ru:%0.3f lm:%0.3f rm:%0.3f' % (lsv, rsv, luv, ruv, lmv, rmv))
