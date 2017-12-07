@@ -92,66 +92,74 @@ it = 0
 writer = WriteCSV()
 writer.writeHeader()
 
-while True :
-    it += 1
-    t = target_ips*it
-
-    ## normalized to lie between 0 and 1 (1 close, 0 far)
-    lsv = SENSOR_GAIN*float(ls.value())/MAX_SENSOR
-    rsv = SENSOR_GAIN*float(rs.value())/MAX_SENSOR
-
-    luv = 1.0-max(0.0,min(1.0,float(lu.value())/200.0))
-    ruv = 1.0-max(0.0,min(1.0,float(ru.value())/200.0))
+try:
+    output_file = writer.openFile()
     
-    Leds.set(Leds.LEFT, brightness_pct=lsv)
-    Leds.set(Leds.RIGHT, brightness_pct=rsv)
+    while True :
+        it += 1
+        t = target_ips*it
 
-    # if max(lsv,rsv) < 0.1 :
-    #     SENSOR_GAIN *=1.05
-    #     print('SENSOR_GAIN increased to : %f' %(SENSOR_GAIN))
-    # elif min(lsv,rsv) > 0.5 :
-    #     SENSOR_GAIN *=0.95
-    #     print('SENSOR_GAIN decreased to : %f' %(SENSOR_GAIN))
+        ## normalized to lie between 0 and 1 (1 close, 0 far)
+        lsv = SENSOR_GAIN*float(ls.value())/MAX_SENSOR
+        rsv = SENSOR_GAIN*float(rs.value())/MAX_SENSOR
 
-    # ## LOVE + AGGR
-    # lmv = BIAS + (rsv-0.2*lsv)
-    # rmv = BIAS + (lsv-0.2*rsv)
-
-    ## AGGR
-    lmv = BIAS + rsv - 0.0*lsv - (ruv*2.)
-    rmv = BIAS + lsv - 0.0*rsv - (luv*2.)
-
-    lmv *= OUTPUT_GAIN
-    rmv *= OUTPUT_GAIN
-
-    if max(lmv,rmv) > MAX_MOTOR :
-        lmv -= max_mv - MAX_MOTOR
-        rmv -= max_mv - MAX_MOTOR
-        # OUTPUT_GAIN *= 0.95
-        # print('OUTPUT_GAIN decreased to : %f' %(OUTPUT_GAIN))
-
-    # if min(lmv,rmv) < 0.05 :
-    #     OUTPUT_GAIN *= 1.05
-    #     print('OUTPUT_GAIN increased to : %f' %(OUTPUT_GAIN))
-
+        luv = 1.0-max(0.0,min(1.0,float(lu.value())/200.0))
+        ruv = 1.0-max(0.0,min(1.0,float(ru.value())/200.0))
         
-    if (it % 10) == 0 :
-        print('ls: %0.3f rs:%0.3f lm: %0.3f rm:%0.3f' %(lsv,rsv,lmv,rmv))
+        Leds.set(Leds.LEFT, brightness_pct=lsv)
+        Leds.set(Leds.RIGHT, brightness_pct=rsv)
 
-    lmv = int(max(-1000,min(1000,MAX_MOTOR * lmv)))
-    rmv = int(max(-1000,min(1000,MAX_MOTOR * rmv)))
+        # if max(lsv,rsv) < 0.1 :
+        #     SENSOR_GAIN *=1.05
+        #     print('SENSOR_GAIN increased to : %f' %(SENSOR_GAIN))
+        # elif min(lsv,rsv) > 0.5 :
+        #     SENSOR_GAIN *=0.95
+        #     print('SENSOR_GAIN decreased to : %f' %(SENSOR_GAIN))
 
-    lm.run_forever(speed_sp = lmv)
-    rm.run_forever(speed_sp = rmv)
-	
-#    writer.writeData()
-	
-    btn.process() # Check for currently pressed buttons.
+        # ## LOVE + AGGR
+        # lmv = BIAS + (rsv-0.2*lsv)
+        # rmv = BIAS + (lsv-0.2*rsv)
 
-    it_duration = time()-start_time
-    sleep_duration = max(0.0,target_ips-it_duration)
-    sleep(sleep_duration)
-    if (it %50 == 0) :
-        print('it dur: %f  (slept for %f)' %(time()-start_time,sleep_duration))
+        ## AGGR
+        lmv = BIAS + rsv - 0.0*lsv - (ruv*2.)
+        rmv = BIAS + lsv - 0.0*rsv - (luv*2.)
+
+        lmv *= OUTPUT_GAIN
+        rmv *= OUTPUT_GAIN
+
+        if max(lmv,rmv) > MAX_MOTOR :
+            lmv -= max_mv - MAX_MOTOR
+            rmv -= max_mv - MAX_MOTOR
+            # OUTPUT_GAIN *= 0.95
+            # print('OUTPUT_GAIN decreased to : %f' %(OUTPUT_GAIN))
+
+        # if min(lmv,rmv) < 0.05 :
+        #     OUTPUT_GAIN *= 1.05
+        #     print('OUTPUT_GAIN increased to : %f' %(OUTPUT_GAIN))
+
+            
+        if (it % 10) == 0 :
+            print('ls: %0.3f rs:%0.3f lm: %0.3f rm:%0.3f' %(lsv,rsv,lmv,rmv))
+
+        lmv = int(max(-1000,min(1000,MAX_MOTOR * lmv)))
+        rmv = int(max(-1000,min(1000,MAX_MOTOR * rmv)))
+
+        lm.run_forever(speed_sp = lmv)
+        rm.run_forever(speed_sp = rmv)
+            
+        sensor_motor_values = [lsv, rsv, luv, ruv, lmv, rmv]
+        writer.writeData(sensor_motor_values, output_file)
+
+        btn.process() # Check for currently pressed buttons.
+
+        it_duration = time()-start_time
+        sleep_duration = max(0.0,target_ips-it_duration)
+        sleep(sleep_duration)
+        if (it %50 == 0) :
+            print('it dur: %f  (slept for %f)' %(time()-start_time,sleep_duration))
+            
+        start_time = time()
         
-    start_time = time()
+finally:
+    writer.closeFile()
+
