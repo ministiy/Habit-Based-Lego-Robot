@@ -134,26 +134,8 @@ while True:
     # lmv = BIAS + (rsv-0.2*lsv)
     # rmv = BIAS + (lsv-0.2*rsv)
 
-    ## AGGR
-    lmv = BIAS + rsv - 0.0 * lsv - (ruv * 2.)
-    rmv = BIAS + lsv - 0.0 * rsv - (luv * 2.)
-
-    lmv *= OUTPUT_GAIN
-    rmv *= OUTPUT_GAIN
-
-    if max(lmv, rmv) > MAX_MOTOR:
-        lmv -= max_mv - MAX_MOTOR
-        rmv -= max_mv - MAX_MOTOR
-        # OUTPUT_GAIN *= 0.95
-        # print('OUTPUT_GAIN decreased to : %f' %(OUTPUT_GAIN))
-
-    # if min(lmv,rmv) < 0.05 :
-    #     OUTPUT_GAIN *= 1.05
-    #     print('OUTPUT_GAIN increased to : %f' %(OUTPUT_GAIN))
-
-
-    lmv = int(max(-1000, min(1000, MAX_MOTOR * lmv)))
-    rmv = int(max(-1000, min(1000, MAX_MOTOR * rmv)))
+    lmv = motor_left.speed
+    rmv = motor_right.speed
 
 
     # writing to a csv file called output.csv to store sensory-motor data where
