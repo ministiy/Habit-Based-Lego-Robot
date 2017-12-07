@@ -2,7 +2,7 @@
 from ev3dev.ev3 import *
 from math import sin,cos
 from time import sleep,time
-import csv
+from writeCSV import WriteCSV
 
 # commented this out to reduce annoying beep
 #Sound.beep()
@@ -88,10 +88,10 @@ start_time = time()
 
 it = 0
 
-header = ['left sensor','right sensor' , 'left ultraviolet sensor' , 'right ultraviolet sensor' , 'left motor', 'right motor']
-with open('output.csv', 'w', newline="") as output_file:
-        wr = csv.writer(output_file,delimiter = ',' , quoting = csv.QUOTE_ALL)
-        wr.writerow(header)
+# Initialize the class for writing CSV
+writer = WriteCSV()
+writer.writeHeader()
+
 while True :
     it += 1
     t = target_ips*it
@@ -143,19 +143,9 @@ while True :
 
     lm.run_forever(speed_sp = lmv)
     rm.run_forever(speed_sp = rmv)
-
-    
-    # writing to a csv file called output.csv to store sensory-motor data where
-    #   lsv = left colour sensor value
-    #   rsv = right colour sensor value
-    #   luv = left ultraviolet sensor value
-    #   ruv = right ultraviolet sensor value
-    #   lmv = left motor value
-    #   rmv = right motor value
-    with open('output.csv', 'a', newline="") as output_file:
-        wr = csv.writer(output_file, delimiter = ',' , quoting=csv.QUOTE_ALL)
-        wr.writerow([lsv, rsv, luv, ruv, lmv, rmv])
-
+	
+	writer.writeData()
+	
     btn.process() # Check for currently pressed buttons.
 
     it_duration = time()-start_time
