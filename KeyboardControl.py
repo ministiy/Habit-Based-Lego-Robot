@@ -7,7 +7,8 @@
 import termios, tty, sys
 from ev3dev.ev3 import *
 import csv
-from multiprocessing import Process
+import threading
+
 
 MAX_SENSOR = 100.0 # percent
 MAX_MOTOR = 1000.0
@@ -160,6 +161,9 @@ with open('output.csv', 'w', newline="") as output_file:
 
 print("Program started")
 
-if __name__ == '__main__':
-    p1 = Process(target=controls).start()
-    p2 = Process(target=sensor_values).start()
+try:
+    threading._start_new_thread(sensor_values)
+    controls()
+except:
+    print('Error - unable to start thread')
+
