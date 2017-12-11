@@ -88,13 +88,6 @@ def stop():
 
 # ==============================================
 
-header = ['left sensor','right sensor' , 'left ultraviolet sensor' , 'right ultraviolet sensor' , 'left motor', 'right motor']
-with open('output.csv', 'w', newline="") as output_file:
-        wr = csv.writer(output_file,delimiter = ',' , quoting = csv.QUOTE_ALL)
-        wr.writerow(header)
-
-print("Program started")
-
 def controls():
     while True:
         k = getch()
@@ -114,7 +107,9 @@ def controls():
         if k == 'q':
             exit()
 
-    sensor_values()
+        sensor_values()
+
+# ==============================================
 
 def sensor_values():
     ## normalized to lie between 0 and 1 (1 close, 0 far)
@@ -153,3 +148,13 @@ def sensor_values():
         wr = csv.writer(output_file, delimiter=',', quoting=csv.QUOTE_ALL)
         wr.writerow([lsv, rsv, luv, ruv, lmv, rmv])
     print('ls:%0.3f rs:%0.3f lu:%0.3f ru:%0.3f lm:%0.3f rm:%0.3f' % (lsv, rsv, luv, ruv, lmv, rmv))
+
+# ==============================================
+
+header = ['left sensor','right sensor' , 'left ultraviolet sensor' , 'right ultraviolet sensor' , 'left motor', 'right motor']
+with open('output.csv', 'w', newline="") as output_file:
+        wr = csv.writer(output_file,delimiter = ',' , quoting = csv.QUOTE_ALL)
+        wr.writerow(header)
+
+print("Program started")
+controls()
