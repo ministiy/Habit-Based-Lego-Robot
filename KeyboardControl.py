@@ -7,6 +7,7 @@
 import termios, tty, sys
 from ev3dev.ev3 import *
 import csv
+from multiprocessing import Process, Queue
 
 MAX_SENSOR = 100.0 # percent
 MAX_MOTOR = 1000.0
@@ -95,25 +96,27 @@ with open('output.csv', 'w', newline="") as output_file:
 
 print("Program started")
 
-while True:
-    k = getch()
-#    print(k)
-    if k == 'w':
-        forward()
-    if k == 's':
-        back()
-    if k == 'a':
-        left()
-    if k == 'd':
-        right()
-#    if k == 'f':
-#        fire()
-    if k == 'p':
-        stop()
-    if k == 'q':
-        exit()
+def controls():
+    while True:
+        k = getch()
+        #    print(k)
+        if k == 'w':
+            forward()
+        if k == 's':
+            back()
+        if k == 'a':
+            left()
+        if k == 'd':
+            right()
+    #    if k == 'f':
+    #        fire()
+        if k == 'p':
+            stop()
+        if k == 'q':
+            exit()
 
-        ## normalized to lie between 0 and 1 (1 close, 0 far)
+def sensor_values():
+    ## normalized to lie between 0 and 1 (1 close, 0 far)
     lsv = SENSOR_GAIN * float(ls.value()) / MAX_SENSOR
     rsv = SENSOR_GAIN * float(rs.value()) / MAX_SENSOR
 
@@ -149,3 +152,9 @@ while True:
         wr = csv.writer(output_file, delimiter=',', quoting=csv.QUOTE_ALL)
         wr.writerow([lsv, rsv, luv, ruv, lmv, rmv])
     print('ls:%0.3f rs:%0.3f lu:%0.3f ru:%0.3f lm:%0.3f rm:%0.3f' % (lsv, rsv, luv, ruv, lmv, rmv))
+
+if __name__ == '__main__':
+    q = Queue()
+    controlProcess = Process(target=sensor_values)
+    controlProcess.start()
+    Process(target=controls).start()
