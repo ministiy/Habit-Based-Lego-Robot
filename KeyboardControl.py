@@ -157,4 +157,3 @@ if __name__ == '__main__':
     q = Queue()
     controlProcess = Process(target=sensor_values)
     controlProcess.start()
-    Process(target=controls).start()
