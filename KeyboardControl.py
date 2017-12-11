@@ -7,6 +7,7 @@
 import termios, tty, sys
 from ev3dev.ev3 import *
 import csv
+from multiprocessing import Process
 
 MAX_SENSOR = 100.0 # percent
 MAX_MOTOR = 1000.0
@@ -151,10 +152,14 @@ def sensor_values():
 
 # ==============================================
 
+
 header = ['left sensor','right sensor' , 'left ultraviolet sensor' , 'right ultraviolet sensor' , 'left motor', 'right motor']
 with open('output.csv', 'w', newline="") as output_file:
         wr = csv.writer(output_file,delimiter = ',' , quoting = csv.QUOTE_ALL)
         wr.writerow(header)
 
 print("Program started")
-controls()
+
+if __name__ == '__main__':
+    p1 = Process(target=controls).start()
+    p2 = Process(target=sensor_values).start()
