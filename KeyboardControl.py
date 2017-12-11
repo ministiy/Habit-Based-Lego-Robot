@@ -114,7 +114,7 @@ def controls():
         if k == 'q':
             exit()
 
-        sensor_values()
+    sensor_values()
 
 def sensor_values():
     ## normalized to lie between 0 and 1 (1 close, 0 far)
