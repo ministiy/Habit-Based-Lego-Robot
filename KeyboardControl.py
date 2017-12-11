@@ -170,9 +170,7 @@ class myThread (threading.Thread):
       self.name = name
       self.counter = counter
    def run(self):
-      print ("Starting " + self.name)
-      print_time(self.name, 5, self.counter)
-      print ("Exiting " + self.name)
+      sensor_values()
 
 def print_time(threadName, counter, delay):
    while counter:
