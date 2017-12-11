@@ -4,10 +4,9 @@
 # Note: the code below was copied from the link https://sites.google.com/site/ev3python/learn_ev3_python/keyboard-control
 # on Dec, 7th 2017
 
-import termios, tty, sys, signal
+import termios, tty, sys
 from ev3dev.ev3 import *
 import csv
-from multiprocessing import Process, Queue
 
 MAX_SENSOR = 100.0 # percent
 MAX_MOTOR = 1000.0
@@ -40,17 +39,9 @@ ru.mode='US-DIST-CM'
 def getch():
     fd = sys.stdin.fileno()
     old_settings = termios.tcgetattr(fd)
-    if hasattr(signal, 'SIGTTOU'):
-        old_handler = signal.signal(signal.SIGTTOU, signal.SIG_IGN)
-    else:
-        old_handler = None
-
     tty.setcbreak(fd)
     ch = sys.stdin.read(1)
     termios.tcsetattr(fd, termios.TCSADRAIN, old_settings)
-
-    if old_handler is not None:
-        signal.signal(signal.SIGTTOU, old_handler)
 
     return ch
 
@@ -123,6 +114,8 @@ def controls():
         if k == 'q':
             exit()
 
+        sensor_values()
+
 def sensor_values():
     ## normalized to lie between 0 and 1 (1 close, 0 far)
     lsv = SENSOR_GAIN * float(ls.value()) / MAX_SENSOR
@@ -160,9 +153,3 @@ def sensor_values():
         wr = csv.writer(output_file, delimiter=',', quoting=csv.QUOTE_ALL)
         wr.writerow([lsv, rsv, luv, ruv, lmv, rmv])
     print('ls:%0.3f rs:%0.3f lu:%0.3f ru:%0.3f lm:%0.3f rm:%0.3f' % (lsv, rsv, luv, ruv, lmv, rmv))
-
-if __name__ == '__main__':
-    q = Queue()
-    controlProcess = Process(target=sensor_values)
-    controlProcess.start()
-    Process(target=controls).start()
