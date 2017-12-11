@@ -4,7 +4,7 @@
 # Note: the code below was copied from the link https://sites.google.com/site/ev3python/learn_ev3_python/keyboard-control
 # on Dec, 7th 2017
 
-import termios, tty, sys
+import termios, tty, sys, signal
 from ev3dev.ev3 import *
 import csv
 from multiprocessing import Process, Queue
@@ -40,9 +40,17 @@ ru.mode='US-DIST-CM'
 def getch():
     fd = sys.stdin.fileno()
     old_settings = termios.tcgetattr(fd)
+    if hasattr(signal, 'SIGTTOU'):
+        old_handler = signal.signal(signal.SIGTTOU, signal.SIG_IGN)
+    else:
+        old_handler = None
+
     tty.setcbreak(fd)
     ch = sys.stdin.read(1)
     termios.tcsetattr(fd, termios.TCSADRAIN, old_settings)
+
+    if old_handler is not None:
+        signal.signal(signal.SIGTTOU, old_handler)
 
     return ch
 
@@ -157,3 +165,4 @@ if __name__ == '__main__':
     q = Queue()
     controlProcess = Process(target=sensor_values)
     controlProcess.start()
+    Process(target=controls).start()
