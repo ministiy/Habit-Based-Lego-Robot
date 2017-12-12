@@ -159,8 +159,10 @@ def sensor_values(threadName):
             wr.writerow([lsv, rsv, luv, ruv, lmv, rmv])
         print('ls:%0.3f rs:%0.3f lu:%0.3f ru:%0.3f lm:%0.3f rm:%0.3f' % (lsv, rsv, luv, ruv, lmv, rmv))
 
-        #
-        time.sleep(2.0 - ((time.time() - starttime) % 2.0))
+        # Time period to wait until new sensor values are taken. Currently values are taken every 0.05 seconds.
+        # To change this, change X in
+        #   time.sleep(X - ((time.time() - starttime) % X))
+        time.sleep(0.05 - ((time.time() - starttime) % 0.05))
 
 # ==============================================
 
