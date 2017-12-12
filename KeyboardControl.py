@@ -21,8 +21,8 @@ class myThread (threading.Thread):
         self.writer = writer
    def run(self):
         generator = sensor_values(self.name)
-        for i in generator:
-            self.writer.writeData(i)
+        #for i in generator:
+        #    self.writer.writeData(i)
 
 
 def startNewThread(name, writer):
