@@ -161,7 +161,7 @@ def sensor_values(threadName):
 
         #
         time.sleep(0.05 - ((time.time() - starttime) % 0.05))
-        print('time = %0.3f' + time.time())
+        print('time = ' + time.time())
 # ==============================================
 
 
