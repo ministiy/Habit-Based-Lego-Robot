@@ -113,46 +113,48 @@ def controls():
 
 # ==============================================
 
-def sensor_values(threadName):
-    while True:
-        if exitFlag:
-            threadName.exit()
-        ## normalized to lie between 0 and 1 (1 close, 0 far)
-        lsv = SENSOR_GAIN * float(ls.value()) / MAX_SENSOR
-        rsv = SENSOR_GAIN * float(rs.value()) / MAX_SENSOR
+def sensor_values():
 
-        luv = 1.0 - max(0.0, min(1.0, float(lu.value()) / 200.0))
-        ruv = 1.0 - max(0.0, min(1.0, float(ru.value()) / 200.0))
+    nextthread = threading.Timer(1.0, sensor_values())
+    nextthread.daemon = True
+    nextthread.start()
 
-        Leds.set(Leds.LEFT, brightness_pct=lsv)
-        Leds.set(Leds.RIGHT, brightness_pct=rsv)
+    ## normalized to lie between 0 and 1 (1 close, 0 far)
+    lsv = SENSOR_GAIN * float(ls.value()) / MAX_SENSOR
+    rsv = SENSOR_GAIN * float(rs.value()) / MAX_SENSOR
 
-        # if max(lsv,rsv) < 0.1 :
-        #     SENSOR_GAIN *=1.05
-        #     print('SENSOR_GAIN increased to : %f' %(SENSOR_GAIN))
-        # elif min(lsv,rsv) > 0.5 :
-        #     SENSOR_GAIN *=0.95
-        #     print('SENSOR_GAIN decreased to : %f' %(SENSOR_GAIN))
+    luv = 1.0 - max(0.0, min(1.0, float(lu.value()) / 200.0))
+    ruv = 1.0 - max(0.0, min(1.0, float(ru.value()) / 200.0))
 
-        # ## LOVE + AGGR
-        # lmv = BIAS + (rsv-0.2*lsv)
-        # rmv = BIAS + (lsv-0.2*rsv)
+    Leds.set(Leds.LEFT, brightness_pct=lsv)
+    Leds.set(Leds.RIGHT, brightness_pct=rsv)
 
-        lmv = motor_left.speed
-        rmv = motor_right.speed
+    # if max(lsv,rsv) < 0.1 :
+    #     SENSOR_GAIN *=1.05
+    #     print('SENSOR_GAIN increased to : %f' %(SENSOR_GAIN))
+    # elif min(lsv,rsv) > 0.5 :
+    #     SENSOR_GAIN *=0.95
+    #     print('SENSOR_GAIN decreased to : %f' %(SENSOR_GAIN))
+
+    # ## LOVE + AGGR
+    # lmv = BIAS + (rsv-0.2*lsv)
+    # rmv = BIAS + (lsv-0.2*rsv)
+
+    lmv = motor_left.speed
+    rmv = motor_right.speed
 
 
-        # writing to a csv file called output.csv to store sensory-motor data where
-        #   lsv = left colour sensor value
-        #   rsv = right colour sensor value
-        #   luv = left ultraviolet sensor value
-        #   ruv = right ultraviolet sensor value
-        #   lmv = left motor value
-        #   rmv = right motor value
-        with open('output.csv', 'a', newline="") as output_file:
-            wr = csv.writer(output_file, delimiter=',', quoting=csv.QUOTE_ALL)
-            wr.writerow([lsv, rsv, luv, ruv, lmv, rmv])
-        print('ls:%0.3f rs:%0.3f lu:%0.3f ru:%0.3f lm:%0.3f rm:%0.3f' % (lsv, rsv, luv, ruv, lmv, rmv))
+    # writing to a csv file called output.csv to store sensory-motor data where
+    #   lsv = left colour sensor value
+    #   rsv = right colour sensor value
+    #   luv = left ultraviolet sensor value
+    #   ruv = right ultraviolet sensor value
+    #   lmv = left motor value
+    #   rmv = right motor value
+    with open('output.csv', 'a', newline="") as output_file:
+        wr = csv.writer(output_file, delimiter=',', quoting=csv.QUOTE_ALL)
+        wr.writerow([lsv, rsv, luv, ruv, lmv, rmv])
+    print('ls:%0.3f rs:%0.3f lu:%0.3f ru:%0.3f lm:%0.3f rm:%0.3f' % (lsv, rsv, luv, ruv, lmv, rmv))
 
 # ==============================================
 
@@ -166,6 +168,7 @@ print("Program started")
 
 exitFlag = 0
 
+# A thread class from https://www.tutorialspoint.com/python/python_multithreading.htm
 class myThread (threading.Thread):
    def __init__(self, threadID, name, counter):
       threading.Thread.__init__(self)
@@ -173,16 +176,14 @@ class myThread (threading.Thread):
       self.name = name
       self.counter = counter
    def run(self):
-      sensor_values(self.name)
+      sensor_values()
 
-# Create new threads
+# Create a new daemon thread just for taking in sensory-motor values
 thread1 = myThread(1, "Thread-1", 1)
-#thread2 = myThread(2, "Thread-2", 2)
-
 thread1.daemon = True
-# Start new Threads
 thread1.start()
 
+# Control the robot using the main thread
 controls()
-print ("Exiting Main Thread")
+print ("Exiting program")
 
