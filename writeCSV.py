@@ -5,13 +5,14 @@ class WriteCSV:
 
     def __init__(self,filename):
         self.filename = filename
+        self.file = None
 
     def openFile(self):
         file = open(self.filename, 'a', newline="")
-        return file
-        
+        self.file = file
+
     def closeFile(self):
-        self.filename.close()
+        self.file.close()
         
     def writeHeader(self):
         header = ['left sensor', 'right sensor', 'left ultraviolet sensor', 'right ultraviolet sensor', 'left motor',

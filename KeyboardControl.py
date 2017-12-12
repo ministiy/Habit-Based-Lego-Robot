@@ -20,9 +20,7 @@ class myThread (threading.Thread):
         self.counter = counter
         self.writer = writer
    def run(self):
-        generator = sensor_values(self.name)
-        for i in generator:
-            self.writer.writeData(i)
+        sensor_values(self.name, self.writer)
 
 
 def startNewThread(name, writer):
@@ -134,7 +132,7 @@ def controls():
 
 # ==============================================
 
-def sensor_values(threadName):
+def sensor_values(threadName, writer):
 
     # Get original time as a basis to run the following code every n seconds (where n <= 0.1)
     starttime = time.time()
@@ -175,8 +173,8 @@ def sensor_values(threadName):
         #   ruv = right ultraviolet sensor value
         #   lmv = left motor value
         #   rmv = right motor value
-        #sensor_motor_values = [lsv, rsv, luv, ruv, lmv, rmv]
-        #writer.writeData(sensor_motor_values, output_file)
+        sensor_motor_values = [lsv, rsv, luv, ruv, lmv, rmv]
+        writer.writeData(sensor_motor_values)
 
         #with open('output.csv', 'a', newline="") as output_file:
             #wr = csv.writer(output_file, delimiter=',', quoting=csv.QUOTE_ALL)
@@ -187,7 +185,7 @@ def sensor_values(threadName):
         # To change this, change X in
         #   time.sleep(X - ((time.time() - starttime) % X))
         time.sleep(0.05 - ((time.time() - starttime) % 0.05))
-        yield [lsv, rsv, luv, ruv, lmv, rmv]
+        #yield [lsv, rsv, luv, ruv, lmv, rmv]
 
 # ==============================================
 
