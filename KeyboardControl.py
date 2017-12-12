@@ -114,7 +114,10 @@ def controls():
 # ==============================================
 
 def sensor_values(threadName):
+
+    # Get original time as a basis to run the following code every n seconds (where n <= 0.1)
     starttime = time.time()
+
     while True:
 
         if exitFlag:
@@ -156,7 +159,8 @@ def sensor_values(threadName):
             wr.writerow([lsv, rsv, luv, ruv, lmv, rmv])
         print('ls:%0.3f rs:%0.3f lu:%0.3f ru:%0.3f lm:%0.3f rm:%0.3f' % (lsv, rsv, luv, ruv, lmv, rmv))
 
-        time.sleep(1.0 - ((time.time() - starttime) % 1.0))
+        #
+        time.sleep(0.05 - ((time.time() - starttime) % 0.05))
 # ==============================================
 
 
