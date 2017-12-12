@@ -8,7 +8,28 @@ import termios, tty, sys
 from ev3dev.ev3 import *
 import csv
 import threading
+from writeCSV import WriteCSV
 
+
+# A thread class from https://www.tutorialspoint.com/python/python_multithreading.htm
+class myThread (threading.Thread):
+   def __init__(self, threadID, name, counter, writer):
+        threading.Thread.__init__(self)
+        self.threadID = threadID
+        self.name = name
+        self.counter = counter
+        self.writer = writer
+   def run(self):
+        generator = sensor_values(self.name)
+        for i in generator:
+            self.writer.writeData(i)
+
+
+def startNewThread(name, writer):
+    # Create a new daemon thread just for taking in sensory-motor values
+    thread1 = myThread(1, "Thread-1", 1, writer)
+    thread1.daemon = True
+    thread1.start()
 
 MAX_SENSOR = 100.0 # percent
 MAX_MOTOR = 1000.0
@@ -117,9 +138,9 @@ def sensor_values(threadName):
 
     # Get original time as a basis to run the following code every n seconds (where n <= 0.1)
     starttime = time.time()
+    exitFlag = 0
 
     while True:
-
         if exitFlag:
             threadName.exit()
         ## normalized to lie between 0 and 1 (1 close, 0 far)
@@ -154,44 +175,47 @@ def sensor_values(threadName):
         #   ruv = right ultraviolet sensor value
         #   lmv = left motor value
         #   rmv = right motor value
-        with open('output.csv', 'a', newline="") as output_file:
-            wr = csv.writer(output_file, delimiter=',', quoting=csv.QUOTE_ALL)
-            wr.writerow([lsv, rsv, luv, ruv, lmv, rmv])
-        print('ls:%0.3f rs:%0.3f lu:%0.3f ru:%0.3f lm:%0.3f rm:%0.3f' % (lsv, rsv, luv, ruv, lmv, rmv))
+        #sensor_motor_values = [lsv, rsv, luv, ruv, lmv, rmv]
+        #writer.writeData(sensor_motor_values, output_file)
+
+        #with open('output.csv', 'a', newline="") as output_file:
+            #wr = csv.writer(output_file, delimiter=',', quoting=csv.QUOTE_ALL)
+            #wr.writerow([lsv, rsv, luv, ruv, lmv, rmv])
+        #print('ls:%0.3f rs:%0.3f lu:%0.3f ru:%0.3f lm:%0.3f rm:%0.3f' % (lsv, rsv, luv, ruv, lmv, rmv))
 
         # Time period to wait until new sensor values are taken. Currently values are taken every 0.05 seconds.
         # To change this, change X in
         #   time.sleep(X - ((time.time() - starttime) % X))
         time.sleep(0.05 - ((time.time() - starttime) % 0.05))
+        yield [lsv, rsv, luv, ruv, lmv, rmv]
 
 # ==============================================
 
 
-header = ['left sensor','right sensor' , 'left ultraviolet sensor' , 'right ultraviolet sensor' , 'left motor', 'right motor']
-with open('output.csv', 'w', newline="") as output_file:
-        wr = csv.writer(output_file,delimiter = ',' , quoting = csv.QUOTE_ALL)
-        wr.writerow(header)
+#header = ['left sensor','right sensor' , 'left ultraviolet sensor' , 'right ultraviolet sensor' , 'left motor', 'right motor']
+#with open('output.csv', 'w', newline="") as output_file:
+#        wr = csv.writer(output_file,delimiter = ',' , quoting = csv.QUOTE_ALL)
+#        wr.writerow(header)
+#print("Program started")
 
-print("Program started")
+def openCSVFile():
+    writer = WriteCSV('output.csv')
+    writer.openFile()
+    return writer
 
-exitFlag = 0
+def recordSensorValue():
+    print("Opening output.csv")
+    writer = openCSVFile()
+    writer.writeHeader()
+    print('Starting thread')
+    startNewThread('Thread-1', writer)
+    # Control the robot using the main thread
+    controls()
+    print("Exiting program")
+    writer.closeFile()
 
-# A thread class from https://www.tutorialspoint.com/python/python_multithreading.htm
-class myThread (threading.Thread):
-   def __init__(self, threadID, name, counter):
-      threading.Thread.__init__(self)
-      self.threadID = threadID
-      self.name = name
-      self.counter = counter
-   def run(self):
-      sensor_values(self.name)
 
-# Create a new daemon thread just for taking in sensory-motor values
-thread1 = myThread(1, "Thread-1", 1)
-thread1.daemon = True
-thread1.start()
+if __name__ == '__main__':
+    recordSensorValue()
 
-# Control the robot using the main thread
-controls()
-print ("Exiting program")
 
