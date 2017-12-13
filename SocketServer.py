@@ -16,7 +16,7 @@ class CSVBackgroundThread (threading.Thread):
 
         #Need to change this later to write to CSV file
         while True:
-           data = conn.recv(1024)
+           data = conn.recv(4096)
            listOfValues = pickle.loads(data)
            print('ls:%0.3f rs:%0.3f lu:%0.3f ru:%0.3f lm:%0.3f rm:%0.3f' % (listOfValues[0], listOfValues[1], listOfValues[2], listOfValues[3], listOfValues[4], listOfValues[5]))
 
