@@ -1,5 +1,6 @@
 import socket
 from ev3dev.ev3 import *
+import pickle
 
 
 # Setting up constants and variables before actually starting up the program
@@ -100,8 +101,9 @@ def Main():
             exit()
 
         #message = input(" -> ")
-        #generator = yield [1,2,3,4]
-        #mySocket.send(generator.encode())
+        listOfValues = [1,2,3,4]
+        dataString = pickle.dump(listOfValues)
+        mySocket.send(dataString.encode())
 
     mySocket.close()
 
