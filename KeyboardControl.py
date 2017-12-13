@@ -22,7 +22,7 @@ class myThread (threading.Thread):
    def run(self):
         generator = sensor_values(self.name, self.writer)
         for i in generator:
-            self.writer.write(i)
+            self.writer.writeData(i)
 
 
 def startNewThread(name, writer):
