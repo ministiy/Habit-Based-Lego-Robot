@@ -131,6 +131,7 @@ def sensorValues(threadName):
         # Time period to wait until new sensor values are taken. Currently values are taken every 0.05 seconds.
         # To change this, change X in
         #   time.sleep(X - ((time.time() - starttime) % X))
+
         listOfValues = [lsv, rsv, luv, ruv, lmv, rmv]
         dataString = pickle.dumps(listOfValues)
         mySocket.send(dataString)
