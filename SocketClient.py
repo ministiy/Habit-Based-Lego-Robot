@@ -100,8 +100,8 @@ def Main():
             exit()
 
         #message = input(" -> ")
-        generator = yield [1,2,3,4]
-        mySocket.send(generator.encode())
+        #generator = yield [1,2,3,4]
+        #mySocket.send(generator.encode())
 
     mySocket.close()
 
