@@ -168,7 +168,7 @@ def Main():
 
     # Commands received from the server are translated into actual robot movements
     while True:
-        k = mySocket.recv(1024).decode()
+        k = mySocket.recv(256).decode()
 
         print('Received from server: ' + k)
         if k == 'w':
