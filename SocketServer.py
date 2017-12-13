@@ -54,6 +54,8 @@ def getch():
 
 # Code is based on https://stackoverflow.com/questions/41294848/python-sockets-how-to-connect-between-two-computers-on-the-same-wifi
 def Main():
+
+    #This IP address allows it to broadcast it to "all computers" on the network.
     host = '0.0.0.0'
     port = 5000
 
@@ -73,7 +75,7 @@ def Main():
     print('Starting thread')
     startNewThread('Thread-1', writer)
 
-    writer.closeFile()
+
 
 
 
@@ -98,6 +100,7 @@ def Main():
             break;
 
     conn.close()
+    writer.closeFile()
 
 
 if __name__ == '__main__':
