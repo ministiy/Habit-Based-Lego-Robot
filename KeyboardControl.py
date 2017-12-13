@@ -22,7 +22,7 @@ class myThread (threading.Thread):
    def run(self):
         generator = sensor_values(self.name, self.writer)
         for i in generator:
-            self.writer.write(i)
+            self.writer.writeData(i)
 
 
 def startNewThread(name, writer):
@@ -205,8 +205,8 @@ def openCSVFile():
 
 def recordSensorValue():
     print("Opening output.csv")
+    WriteCSV.writeHeader()
     writer = openCSVFile()
-    writer.writeHeader()
     print('Starting thread')
     startNewThread('Thread-1', writer)
     # Control the robot using the main thread
