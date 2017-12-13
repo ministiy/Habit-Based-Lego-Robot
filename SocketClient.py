@@ -103,7 +103,7 @@ def Main():
         #message = input(" -> ")
         listOfValues = [1,2,3,4]
         dataString = pickle.dumps(listOfValues)
-        mySocket.send(dataString.encode())
+        mySocket.send(dataString)
 
     mySocket.close()
 
