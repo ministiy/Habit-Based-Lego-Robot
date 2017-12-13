@@ -3,7 +3,10 @@ from ev3dev.ev3 import *
 import pickle
 import threading
 
+# ============================================
 # A thread class from https://www.tutorialspoint.com/python/python_multithreading.htm
+# This thread class represents a background thread on the robot to collect sensor-motor data and send it back
+# to the server.
 class SensorBackgroundThread (threading.Thread):
     def __init__(self, threadID, name, counter):
         threading.Thread.__init__(self)
@@ -14,6 +17,7 @@ class SensorBackgroundThread (threading.Thread):
         while True:
             sensorValues(self.name)
 
+# =============================================
 
 # Setting up constants and variables before actually starting up the program
 MAX_SENSOR = 100.0 # percent
@@ -42,7 +46,7 @@ lu.mode='US-DIST-CM'
 ru = UltrasonicSensor('in4')
 ru.mode='US-DIST-CM'
 
-
+# ==== ROBOT MOVEMENT FUNCTIONS === #
 # ==============================================
 
 def forward():
@@ -76,7 +80,9 @@ def stop():
     motor_left.stop()
     motor_right.stop()
 
+# ==============================================
 
+# ==== DATA COLLECTION FUNCTIONS ==== #
 # ==============================================
 
 def sensorValues(threadName):
@@ -159,11 +165,9 @@ def Main():
     mySocket.connect((host, port))
 
     startNewThread('Thread-1')
-    #message = input(" -> ")
 
-    while True: #message != 'q':
-        #mySocket.send(message.encode())
-
+    # Commands received from the server are translated into actual robot movements
+    while True:
         k = mySocket.recv(1024).decode()
 
         print('Received from server: ' + k)
@@ -175,17 +179,13 @@ def Main():
             left()
         if k == 'd':
             right()
-            #    if k == 'f':
-            #        fire()
         if k == 'p':
             stop()
         if k == 'q':
             exit()
 
-
-
+    # Close the socket after the program has quit from the server side
     mySocket.close()
-
 
 if __name__ == '__main__':
     Main()
