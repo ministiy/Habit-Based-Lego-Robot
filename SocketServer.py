@@ -5,6 +5,7 @@ import pickle
 from writeCSV import WriteCSV
 
 # A thread class from https://www.tutorialspoint.com/python/python_multithreading.htm
+# This class represents a background thread used by the server to store collected data into a .csv file
 class CSVBackgroundThread (threading.Thread):
    def __init__(self, threadID, name, counter, writer):
         threading.Thread.__init__(self)
@@ -13,13 +14,13 @@ class CSVBackgroundThread (threading.Thread):
         self.counter = counter
         self.writer = writer
    def run(self):
-
         #Need to change this later to write to CSV file
         while True:
            data = conn.recv(4096)
            listOfValues = pickle.loads(data)
            print('ls:%0.3f rs:%0.3f lu:%0.3f ru:%0.3f lm:%0.3f rm:%0.3f' % (listOfValues[0], listOfValues[1], listOfValues[2], listOfValues[3], listOfValues[4], listOfValues[5]))
 
+# ==== CSV FUNCTIONS ==== #
 # ==============================================
 
 def startNewThread(name, writer):
@@ -37,6 +38,8 @@ def openCSVFile():
 
 # ==============================================
 
+# ==== ROBOT COMMAND FUNCTIONS ==== #
+# ==============================================
 def getch():
     fd = sys.stdin.fileno()
     old_settings = termios.tcgetattr(fd)
@@ -49,7 +52,6 @@ def getch():
 
 # ==============================================
 
-
 # Code is based on https://stackoverflow.com/questions/41294848/python-sockets-how-to-connect-between-two-computers-on-the-same-wifi
 def Main():
     host = '0.0.0.0'
@@ -60,18 +62,17 @@ def Main():
 
     mySocket.listen(1)
     global conn
-    conn, addr = mySocket.accept() #WORK FROM HERE - NEW THREAD FOR CONN TO RECEIVE DATA FROM CLIENT
+    conn, addr = mySocket.accept()
 
-
-
+    # Setting up the .csv file
     print("Opening output.csv")
     writer = openCSVFile()
     writer.writeHeader()
+
+    # Starting the background thread in order to collect data from the robot
     print('Starting thread')
     startNewThread('Thread-1', writer)
 
-
-    #print("Exiting program")
     writer.closeFile()
 
 
