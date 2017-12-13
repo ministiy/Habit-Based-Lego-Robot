@@ -164,7 +164,7 @@ def Main():
     while True: #message != 'q':
         #mySocket.send(message.encode())
 
-        k = mySocket.recv(1024).decode()
+        k = mySocket.recv(2048).decode()
 
         print('Received from server: ' + k)
         if k == 'w':
