@@ -205,8 +205,8 @@ def openCSVFile():
 
 def recordSensorValue():
     print("Opening output.csv")
+    WriteCSV.writeHeader()
     writer = openCSVFile()
-    writer.writeHeader()
     print('Starting thread')
     startNewThread('Thread-1', writer)
     # Control the robot using the main thread
