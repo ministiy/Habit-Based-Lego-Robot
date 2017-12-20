@@ -9,6 +9,8 @@ from Ev3devSetup import Ev3devSetup
 import socket
 import time
 
+exitFlag = 1
+
 # ============================================
 # A thread class from https://www.tutorialspoint.com/python/python_multithreading.htm
 # This thread class represents a background thread on the robot to collect sensor-motor data and send it back
@@ -37,7 +39,7 @@ class ExitBackgroundThread(threading.Thread):
         while True:
             k = mySocket.recv(2048).decode()
             if k == 'q':
-                nonlocal exitFlag
+                global exitFlag
                 exitFlag = 0
 
 # =============================================
@@ -267,8 +269,7 @@ print("Exit thread created")
 'try:'
 'output_file = writer.openFile()'
 
-global exitFlag
-exitFlag = 1
+
 
 while True:
 
