@@ -89,7 +89,7 @@ start_time = time()
 it = 0
 
 # Initialize the class for writing CSV
-writer = WriteCSV()
+writer = WriteCSV('output.csv')
 writer.writeHeader()
 
 try:

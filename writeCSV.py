@@ -1,14 +1,23 @@
 import csv
-
+from pathlib import Path
 
 class WriteCSV:
-    
+
+    def __init__(self,filename):
+        self.filename = filename
+        self.file = None
+
     def openFile(self):
-        file = open('output.csv', 'a', newline="")
-        return file
-        
-    def closeFile(self, output_file):
-        output_file.close()
+        fileCheck = Path(self.filename)
+        if fileCheck.is_file():
+            file = open(self.filename, 'w')
+            file.close()
+
+        file = open(self.filename, 'a', newline="")
+        self.file = file
+
+    def closeFile(self):
+        self.file.close()
         
     def writeHeader(self):
         header = ['left sensor', 'right sensor', 'left ultraviolet sensor', 'right ultraviolet sensor', 'left motor',
@@ -17,7 +26,7 @@ class WriteCSV:
             wr = csv.writer(output_file, delimiter=',', quoting=csv.QUOTE_ALL)
             wr.writerow(header)
 
-    def writeData(self, sensor_motor_values, output_file):
+    def writeData(self, sensor_motor_values):
         # writing to a csv file called output.csv to store sensory-motor data where
             #   lsv = left colour sensor value
             #   rsv = right colour sensor value
@@ -25,5 +34,5 @@ class WriteCSV:
             #   ruv = right ultraviolet sensor value
             #   lmv = left motor value
             #   rmv = right motor value
-        wr = csv.writer(output_file, delimiter = ',' , quoting=csv.QUOTE_ALL)
+        wr = csv.writer(self.file, delimiter = ',' , quoting=csv.QUOTE_ALL)
         wr.writerow(sensor_motor_values)

@@ -1,36 +1,25 @@
-#!/usr/bin/env python3
-# so that script can be run from Brickman
-
-# Note: the code below was copied from the link https://sites.google.com/site/ev3python/learn_ev3_python/keyboard-control
-# on Dec, 7th 2017
-
-import termios, tty, sys
+import socket
 from ev3dev.ev3 import *
-import csv
+import pickle
 import threading
-from writeCSV import WriteCSV
 
-
+# ============================================
 # A thread class from https://www.tutorialspoint.com/python/python_multithreading.htm
-class myThread (threading.Thread):
-   def __init__(self, threadID, name, counter, writer):
+# This thread class represents a background thread on the robot to collect sensor-motor data and send it back
+# to the server.
+class SensorBackgroundThread (threading.Thread):
+    def __init__(self, threadID, name, counter):
         threading.Thread.__init__(self)
         self.threadID = threadID
         self.name = name
         self.counter = counter
-        self.writer = writer
-   def run(self):
-        generator = sensor_values(self.name, self.writer)
-        for i in generator:
-            self.writer.writeData(i)
+    def run(self):
+        while True:
+            sensorValues(self.name)
 
+# =============================================
 
-def startNewThread(name, writer):
-    # Create a new daemon thread just for taking in sensory-motor values
-    thread1 = myThread(1, "Thread-1", 1, writer)
-    thread1.daemon = True
-    thread1.start()
-
+# Setting up constants and variables before actually starting up the program
 MAX_SENSOR = 100.0 # percent
 MAX_MOTOR = 1000.0
 
@@ -57,24 +46,7 @@ lu.mode='US-DIST-CM'
 ru = UltrasonicSensor('in4')
 ru.mode='US-DIST-CM'
 
-# ==============================================
-
-def getch():
-    fd = sys.stdin.fileno()
-    old_settings = termios.tcgetattr(fd)
-    tty.setcbreak(fd)
-    ch = sys.stdin.read(1)
-    termios.tcsetattr(fd, termios.TCSADRAIN, old_settings)
-
-    return ch
-
-
-# ==============================================
-
-#def fire():
-#    motor_a.run_timed(time_sp=3000, speed_sp=600)
-
-
+# ==== ROBOT MOVEMENT FUNCTIONS === #
 # ==============================================
 
 def forward():
@@ -108,33 +80,12 @@ def stop():
     motor_left.stop()
     motor_right.stop()
 
-
 # ==============================================
 
-def controls():
-    while True:
-        k = getch()
-        #    print(k)
-        if k == 'w':
-            forward()
-        if k == 's':
-            back()
-        if k == 'a':
-            left()
-        if k == 'd':
-            right()
-    #    if k == 'f':
-    #        fire()
-        if k == 'p':
-            stop()
-        if k == 'q':
-            exit()
-
-
-
+# ==== DATA COLLECTION FUNCTIONS ==== #
 # ==============================================
 
-def sensor_values(threadName, writer):
+def sensorValues(threadName):
 
     # Get original time as a basis to run the following code every n seconds (where n <= 0.1)
     starttime = time.time()
@@ -186,36 +137,55 @@ def sensor_values(threadName, writer):
         # Time period to wait until new sensor values are taken. Currently values are taken every 0.05 seconds.
         # To change this, change X in
         #   time.sleep(X - ((time.time() - starttime) % X))
+
+        listOfValues = [lsv, rsv, luv, ruv, lmv, rmv]
+        dataString = pickle.dumps(listOfValues)
+        mySocket.send(dataString)
+
         time.sleep(0.05 - ((time.time() - starttime) % 0.05))
-        yield [lsv, rsv, luv, ruv, lmv, rmv]
 
 # ==============================================
 
+def startNewThread(name):
+    # Create a new daemon thread just for taking in sensory-motor values
+    thread1 = SensorBackgroundThread(1, "Thread-1", 1)
+    thread1.daemon = True
+    thread1.start()
 
-#header = ['left sensor','right sensor' , 'left ultraviolet sensor' , 'right ultraviolet sensor' , 'left motor', 'right motor']
-#with open('output.csv', 'w', newline="") as output_file:
-#        wr = csv.writer(output_file,delimiter = ',' , quoting = csv.QUOTE_ALL)
-#        wr.writerow(header)
-#print("Program started")
+# ==============================================
 
-def openCSVFile():
-    writer = WriteCSV('output.csv')
-    writer.openFile()
-    return writer
+# Code is based on https://stackoverflow.com/questions/41294848/python-sockets-how-to-connect-between-two-computers-on-the-same-wifi
+def Main():
 
-def recordSensorValue():
-    print("Opening output.csv")
-    WriteCSV.writeHeader()
-    writer = openCSVFile()
-    print('Starting thread')
-    startNewThread('Thread-1', writer)
-    # Control the robot using the main thread
-    controls()
-    print("Exiting program")
-    writer.closeFile()
+    #Host IP is IPv4 address of the computer found by Connection Information on Linux
+    host = '192.168.1.69'
+    port = 5000
+    global mySocket
+    mySocket = socket.socket()
+    mySocket.connect((host, port))
 
+    startNewThread('Thread-1')
+
+    # Commands received from the server are translated into actual robot movements
+    while True:
+        k = mySocket.recv(2048).decode()
+
+        print('Received from server: ' + k)
+        if k == 'w':
+            forward()
+        if k == 's':
+            back()
+        if k == 'a':
+            left()
+        if k == 'd':
+            right()
+        if k == 'p':
+            stop()
+        if k == 'q':
+            exit()
+
+    # Close the socket after the program has quit from the server side
+    mySocket.close()
 
 if __name__ == '__main__':
-    recordSensorValue()
-
-
+    Main()
