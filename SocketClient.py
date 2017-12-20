@@ -184,10 +184,14 @@ def Main():
     host = '192.168.1.69'
     port = 5000
     global mySocket
+    print("Creating socket")
     mySocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     mySocket.connect((host, port))
+    print("Socket connected to {0}".format(host))
 
+    print("Starting new thread to send sensor values")
     startNewThread('Thread-1')
+    print("Thread created")
 
     # Commands received from the server are translated into actual robot movements
     while True:

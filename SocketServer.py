@@ -59,23 +59,26 @@ def Main():
     #This IP address allows it to broadcast it to "all computers" on the network.
     host = ''
     port = 5000
+
     print("Creating Socket")
     mySocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     mySocket.bind((host, port))
     print("Socket started listening")
+
     mySocket.listen(1)
     global conn
     conn, addr = mySocket.accept()
     print("Connection established with {0}".format(addr))
+
     # Setting up the .csv file
     print("Opening output.csv")
     writer = openCSVFile()
     writer.writeHeader()
 
     # Starting the background thread in order to collect data from the robot
-    print('Starting thread')
+    print('Starting thread to write sensor values to csv files')
     startNewThread('Thread-1', writer)
-
+    print("Thread created")
 
     # Robot controls on main thread
     # Starting the program on server side (and client side)
