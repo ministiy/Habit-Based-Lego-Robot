@@ -60,7 +60,7 @@ def Main():
     host = ''
     port = 8000
     print("Creating Socket")
-    mySocket = socket.socket()
+    mySocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     mySocket.bind((host, port))
     print("Socket started listening")
     mySocket.listen(1)

@@ -184,7 +184,7 @@ def Main():
     host = '192.168.100.17'
     port = 8000
     global mySocket
-    mySocket = socket.socket()
+    mySocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     mySocket.connect((host, port))
 
     startNewThread('Thread-1')
