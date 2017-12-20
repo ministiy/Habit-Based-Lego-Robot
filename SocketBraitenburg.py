@@ -23,6 +23,23 @@ class SensorBackgroundThread (threading.Thread):
         while True:
             sensorValues(self.name)
 
+# ============================================
+# A thread class from https://www.tutorialspoint.com/python/python_multithreading.htm
+# This thread class represents a background thread on the robot to check if the program has quit or not
+class ExitBackgroundThread(threading.Thread):
+    def __init__(self, threadID, name, counter):
+        threading.Thread.__init__(self)
+        self.threadID = threadID
+        self.name = name
+        self.counter = counter
+
+    def run(self):
+        while True:
+            k = mySocket.recv(2048).decode()
+            if k == 'q':
+                nonlocal exitFlag
+                exitFlag = 0
+
 # =============================================
 
 # commented this out to reduce annoying beep
@@ -141,11 +158,11 @@ def sensorValues(threadName):
 
     # Get original time as a basis to run the following code every n seconds (where n <= 0.1)
     starttime = time.time()
-    exitFlag = 0
+    'exitFlag = 0'
 
     while True:
-        if exitFlag:
-            threadName.exit()
+        'if exitFlag:'
+        '   threadName.exit()'
         ## normalized to lie between 0 and 1 (1 close, 0 far)
         lsv = ev3devrobot.SENSOR_GAIN * float(left_colour_sensor.value()) / ev3devrobot.MAX_SENSOR
         rsv = ev3devrobot.SENSOR_GAIN * float(right_colour_sensor.value()) / ev3devrobot.MAX_SENSOR
@@ -206,6 +223,14 @@ def startNewThread(name):
 
 # ==============================================
 
+def startNewExitThread(name):
+    # Create a new daemon thread just for checking if user has quit the program
+    thread2 = ExitBackgroundThread(1, "Thread-Exit", 1)
+    thread2.daemon = True
+    thread2.start()
+
+# ==============================================
+
 btn.on_left = left
 btn.on_right = right
 btn.on_up = up
@@ -235,16 +260,20 @@ print("Socket connected to {0}".format(host))
 
 print("Starting new thread to send sensor values")
 startNewThread('Thread-1')
-print("Thread created")
+print("Sensor thread created")
+startNewExitThread('Thread-Exit')
+print("Exit thread created")
 
 'try:'
 'output_file = writer.openFile()'
 
-while True:
-    k = mySocket.recv(2048).decode()
-    if k == 'q':
-        exit()
+global exitFlag
+exitFlag = 1
 
+while True:
+
+    if exitFlag == 0:
+        break
 
     it += 1
     t = target_ips * it
