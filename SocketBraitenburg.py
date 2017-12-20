@@ -366,4 +366,5 @@ while True:
 
 # Close the socket after the program has quit from the server side
 mySocket.close()
+cleanup()
 
