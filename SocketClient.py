@@ -27,7 +27,7 @@ motor_left = ev3devrobot.initLargeMotor('outB')
 motor_left.reset()
 
 motor_right = ev3devrobot.initLargeMotor('outC')
-motor_right.start()
+motor_right.reset()
 
 left_colour_sensor = ev3devrobot.initColorSensor('in2')
 left_colour_sensor.mode = 'COL-AMBIENT'
@@ -181,8 +181,8 @@ def startNewThread(name):
 def Main():
 
     #Host IP is IPv4 address of the computer found by Connection Information on Linux
-    host = '192.168.1.69'
-    port = 8000
+    host = '192.168.100.17'
+    port = 5000
     global mySocket
     mySocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     mySocket.connect((host, port))
