@@ -214,7 +214,7 @@ btn.on_enter = enter
 btn.on_backspace = backspace
 
 target_ips = 0.1
-start_time = time()
+start_time = time.time()
 
 it = 0
 
@@ -304,13 +304,13 @@ try:
         """
         btn.process()  # Check for currently pressed buttons.
 
-        it_duration = time() - start_time
+        it_duration = time.time() - start_time
         sleep_duration = max(0.0, target_ips - it_duration)
         sleep(sleep_duration)
         if (it % 50 == 0):
-            print('it dur: %f  (slept for %f)' % (time() - start_time, sleep_duration))
+            print('it dur: %f  (slept for %f)' % (time.time() - start_time, sleep_duration))
 
-        start_time = time()
+        start_time = time.time()
 
 finally:
     'writer.closeFile(output_file)'
