@@ -1,0 +1,8 @@
+#!/bin/bash
+
+export M1=/sys/class/tacho-motor/motor1
+export M0=/sys/class/tacho-motor/motor0
+echo reset > $M0/command
+echo reset > $M1/command
+
+

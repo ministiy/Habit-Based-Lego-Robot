@@ -237,83 +237,83 @@ print("Starting new thread to send sensor values")
 startNewThread('Thread-1')
 print("Thread created")
 
-try:
-    'output_file = writer.openFile()'
+'try:'
+'output_file = writer.openFile()'
 
-    while True:
-        k = mySocket.recv(2048).decode()
-        if k == 'q':
-            exit()
+while True:
+    k = mySocket.recv(2048).decode()
+    if k == 'q':
+        exit()
 
 
-        it += 1
-        t = target_ips * it
+    it += 1
+    t = target_ips * it
 
-        ## normalized to lie between 0 and 1 (1 close, 0 far)
-        lsv = SENSOR_GAIN * float(left_colour_sensor.value()) / MAX_SENSOR
-        rsv = SENSOR_GAIN * float(right_colour_sensor.value()) / MAX_SENSOR
+    ## normalized to lie between 0 and 1 (1 close, 0 far)
+    lsv = SENSOR_GAIN * float(left_colour_sensor.value()) / MAX_SENSOR
+    rsv = SENSOR_GAIN * float(right_colour_sensor.value()) / MAX_SENSOR
 
-        luv = 1.0 - max(0.0, min(1.0, float(left_ultrasonic_sensor.value()) / 200.0))
-        ruv = 1.0 - max(0.0, min(1.0, float(right_ultrasonic_sensor.value()) / 200.0))
+    luv = 1.0 - max(0.0, min(1.0, float(left_ultrasonic_sensor.value()) / 200.0))
+    ruv = 1.0 - max(0.0, min(1.0, float(right_ultrasonic_sensor.value()) / 200.0))
 
-        Leds.set(Leds.LEFT, brightness_pct=lsv)
-        Leds.set(Leds.RIGHT, brightness_pct=rsv)
+    Leds.set(Leds.LEFT, brightness_pct=lsv)
+    Leds.set(Leds.RIGHT, brightness_pct=rsv)
 
-        # if max(lsv,rsv) < 0.1 :
-        #     SENSOR_GAIN *=1.05
-        #     print('SENSOR_GAIN increased to : %f' %(SENSOR_GAIN))
-        # elif min(lsv,rsv) > 0.5 :
-        #     SENSOR_GAIN *=0.95
-        #     print('SENSOR_GAIN decreased to : %f' %(SENSOR_GAIN))
+    # if max(lsv,rsv) < 0.1 :
+    #     SENSOR_GAIN *=1.05
+    #     print('SENSOR_GAIN increased to : %f' %(SENSOR_GAIN))
+    # elif min(lsv,rsv) > 0.5 :
+    #     SENSOR_GAIN *=0.95
+    #     print('SENSOR_GAIN decreased to : %f' %(SENSOR_GAIN))
 
-        # ## LOVE + AGGR
-        # lmv = BIAS + (rsv-0.2*lsv)
-        # rmv = BIAS + (lsv-0.2*rsv)
+    # ## LOVE + AGGR
+    # lmv = BIAS + (rsv-0.2*lsv)
+    # rmv = BIAS + (lsv-0.2*rsv)
 
-        ## AGGR
-        lmv = BIAS + rsv - 0.0 * lsv - (ruv * 2.)
-        rmv = BIAS + lsv - 0.0 * rsv - (luv * 2.)
+    ## AGGR
+    lmv = BIAS + rsv - 0.0 * lsv - (ruv * 2.)
+    rmv = BIAS + lsv - 0.0 * rsv - (luv * 2.)
 
-        lmv *= OUTPUT_GAIN
-        rmv *= OUTPUT_GAIN
+    lmv *= OUTPUT_GAIN
+    rmv *= OUTPUT_GAIN
 
-        if max(lmv, rmv) > MAX_MOTOR:
-            lmv -= max_mv - MAX_MOTOR
-            rmv -= max_mv - MAX_MOTOR
-            # OUTPUT_GAIN *= 0.95
-            # print('OUTPUT_GAIN decreased to : %f' %(OUTPUT_GAIN))
+    if max(lmv, rmv) > MAX_MOTOR:
+        lmv -= max_mv - MAX_MOTOR
+        rmv -= max_mv - MAX_MOTOR
+        # OUTPUT_GAIN *= 0.95
+        # print('OUTPUT_GAIN decreased to : %f' %(OUTPUT_GAIN))
 
-        # if min(lmv,rmv) < 0.05 :
-        #     OUTPUT_GAIN *= 1.05
-        #     print('OUTPUT_GAIN increased to : %f' %(OUTPUT_GAIN))
+    # if min(lmv,rmv) < 0.05 :
+    #     OUTPUT_GAIN *= 1.05
+    #     print('OUTPUT_GAIN increased to : %f' %(OUTPUT_GAIN))
 
-        """""
-        if (it % 10) == 0:
-            print('ls: %0.3f rs:%0.3f lm: %0.3f rm:%0.3f' % (lsv, rsv, lmv, rmv))
-        """
+    """""
+    if (it % 10) == 0:
+        print('ls: %0.3f rs:%0.3f lm: %0.3f rm:%0.3f' % (lsv, rsv, lmv, rmv))
+    """
 
-        lmv = int(max(-1000, min(1000, MAX_MOTOR * lmv)))
-        rmv = int(max(-1000, min(1000, MAX_MOTOR * rmv)))
+    lmv = int(max(-1000, min(1000, MAX_MOTOR * lmv)))
+    rmv = int(max(-1000, min(1000, MAX_MOTOR * rmv)))
 
-        motor_left.run_forever(speed_sp=lmv)
-        motor_right.run_forever(speed_sp=rmv)
+    motor_left.run_forever(speed_sp=lmv)
+    motor_right.run_forever(speed_sp=rmv)
 
-        """""
-        sensor_motor_values = [lsv, rsv, luv, ruv, lmv, rmv]
-        writer.writeData(sensor_motor_values, output_file)
-        """
-        btn.process()  # Check for currently pressed buttons.
+    """""
+    sensor_motor_values = [lsv, rsv, luv, ruv, lmv, rmv]
+    writer.writeData(sensor_motor_values, output_file)
+    """
+    btn.process()  # Check for currently pressed buttons.
 
-        it_duration = time.time() - start_time
-        sleep_duration = max(0.0, target_ips - it_duration)
-        sleep(sleep_duration)
-        if (it % 50 == 0):
-            print('it dur: %f  (slept for %f)' % (time.time() - start_time, sleep_duration))
+    it_duration = time.time() - start_time
+    sleep_duration = max(0.0, target_ips - it_duration)
+    sleep(sleep_duration)
+    if (it % 50 == 0):
+        print('it dur: %f  (slept for %f)' % (time.time() - start_time, sleep_duration))
 
-        start_time = time.time()
+    start_time = time.time()
 
-finally:
-    'writer.closeFile(output_file)'
-    # Close the socket after the program has quit from the server side
-    mySocket.close()
+'finally:'
+'writer.closeFile(output_file)'
+# Close the socket after the program has quit from the server side
+mySocket.close()
 
