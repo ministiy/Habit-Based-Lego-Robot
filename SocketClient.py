@@ -2,6 +2,7 @@ import socket
 from ev3dev.ev3 import *
 import pickle
 import threading
+from Ev3devSetup import Ev3devSetup
 
 # ============================================
 # A thread class from https://www.tutorialspoint.com/python/python_multithreading.htm
@@ -19,6 +20,28 @@ class SensorBackgroundThread (threading.Thread):
 
 # =============================================
 
+#Setting up with MAX_SENSOR, MAX_MOTOR, BIAS, SENSOR_GAIN, OUTPUT_GAIN
+ev3devrobot = Ev3devSetup()
+
+motor_left = ev3devrobot.initLargeMotor('outB')
+motor_left.reset()
+
+motor_right = ev3devrobot.initLargeMotor('outC')
+motor_right.start()
+
+left_colour_sensor = ev3devrobot.initColorSensor('in2')
+left_colour_sensor.mode = 'COL-AMBIENT'
+
+right_colour_sensor = ev3devrobot.initColorSensor('in3')
+right_colour_sensor.mode = 'COL-AMBIENT'
+
+left_ultrasonic_sensor = ev3devrobot.initUltraSonicSensor('in1')
+left_ultrasonic_sensor.mode = 'US-DIST-CM'
+
+right_ultrasonic_sensor = ev3devrobot.initUltraSonicSensor('in4')
+right_ultrasonic_sensor.mode = 'US-DIST-CM'
+
+"""
 # Setting up constants and variables before actually starting up the program
 MAX_SENSOR = 100.0 # percent
 MAX_MOTOR = 1000.0
@@ -45,7 +68,7 @@ lu = UltrasonicSensor('in1')
 lu.mode='US-DIST-CM'
 ru = UltrasonicSensor('in4')
 ru.mode='US-DIST-CM'
-
+"""
 # ==== ROBOT MOVEMENT FUNCTIONS === #
 # ==============================================
 
@@ -158,8 +181,8 @@ def startNewThread(name):
 def Main():
 
     #Host IP is IPv4 address of the computer found by Connection Information on Linux
-    host = '192.168.1.69'
-    port = 5000
+    host = '192.168.99.1'
+    port = 8000
     global mySocket
     mySocket = socket.socket()
     mySocket.connect((host, port))

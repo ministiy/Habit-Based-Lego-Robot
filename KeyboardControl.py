@@ -9,6 +9,7 @@ from ev3dev.ev3 import *
 import csv
 import threading
 from writeCSV import WriteCSV
+from Ev3devSetup import Ev3devSetup
 
 
 # A thread class from https://www.tutorialspoint.com/python/python_multithreading.htm
@@ -31,6 +32,28 @@ def startNewThread(name, writer):
     thread1.daemon = True
     thread1.start()
 
+#Setting up with MAX_SENSOR, MAX_MOTOR, BIAS, SENSOR_GAIN, OUTPUT_GAIN
+ev3devrobot = Ev3devSetup()
+
+motor_left = ev3devrobot.initLargeMotor('outB')
+motor_left.reset()
+
+motor_right = ev3devrobot.initLargeMotor('outC')
+motor_right.start()
+
+left_colour_sensor = ev3devrobot.initColorSensor('in2')
+left_colour_sensor.mode = 'COL-AMBIENT'
+
+right_colour_sensor = ev3devrobot.initColorSensor('in3')
+right_colour_sensor.mode = 'COL-AMBIENT'
+
+left_ultrasonic_sensor = ev3devrobot.initUltraSonicSensor('in1')
+left_ultrasonic_sensor.mode = 'US-DIST-CM'
+
+right_ultrasonic_sensor = ev3devrobot.initUltraSonicSensor('in4')
+right_ultrasonic_sensor.mode = 'US-DIST-CM'
+
+"""
 MAX_SENSOR = 100.0 # percent
 MAX_MOTOR = 1000.0
 
@@ -56,7 +79,7 @@ lu = UltrasonicSensor('in1')
 lu.mode='US-DIST-CM'
 ru = UltrasonicSensor('in4')
 ru.mode='US-DIST-CM'
-
+"""
 # ==============================================
 
 def getch():
@@ -144,8 +167,8 @@ def sensor_values(threadName, writer):
         if exitFlag:
             threadName.exit()
         ## normalized to lie between 0 and 1 (1 close, 0 far)
-        lsv = SENSOR_GAIN * float(ls.value()) / MAX_SENSOR
-        rsv = SENSOR_GAIN * float(rs.value()) / MAX_SENSOR
+        lsv = ev3devrobot.SENSOR_GAIN * float(ls.value()) / ev3devrobot.MAX_SENSOR
+        rsv = ev3devrobot.SENSOR_GAIN * float(rs.value()) / ev3devrobot.MAX_SENSOR
 
         luv = 1.0 - max(0.0, min(1.0, float(lu.value()) / 200.0))
         ruv = 1.0 - max(0.0, min(1.0, float(ru.value()) / 200.0))

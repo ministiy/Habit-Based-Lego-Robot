@@ -57,12 +57,12 @@ def getch():
 def Main():
 
     #This IP address allows it to broadcast it to "all computers" on the network.
-    host = '0.0.0.0'
-    port = 5000
-
+    host = ''
+    port = 8000
+    print("Creating Socket")
     mySocket = socket.socket()
     mySocket.bind((host, port))
-
+    print("Socket started listening")
     mySocket.listen(1)
     global conn
     conn, addr = mySocket.accept()
