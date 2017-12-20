@@ -182,7 +182,7 @@ def Main():
 
     #Host IP is IPv4 address of the computer found by Connection Information on Linux
     host = '192.168.100.17'
-    port = 8000
+    port = 5000
     global mySocket
     mySocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     mySocket.connect((host, port))

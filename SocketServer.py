@@ -58,7 +58,7 @@ def Main():
 
     #This IP address allows it to broadcast it to "all computers" on the network.
     host = ''
-    port = 8000
+    port = 5000
     print("Creating Socket")
     mySocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     mySocket.bind((host, port))
