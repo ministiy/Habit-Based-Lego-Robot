@@ -66,7 +66,7 @@ def Main():
     mySocket.listen(1)
     global conn
     conn, addr = mySocket.accept()
-
+    print("Connection established with {0}".format(addr))
     # Setting up the .csv file
     print("Opening output.csv")
     writer = openCSVFile()

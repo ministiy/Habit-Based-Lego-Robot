@@ -167,11 +167,11 @@ def sensor_values(threadName, writer):
         if exitFlag:
             threadName.exit()
         ## normalized to lie between 0 and 1 (1 close, 0 far)
-        lsv = ev3devrobot.SENSOR_GAIN * float(ls.value()) / ev3devrobot.MAX_SENSOR
-        rsv = ev3devrobot.SENSOR_GAIN * float(rs.value()) / ev3devrobot.MAX_SENSOR
+        lsv = ev3devrobot.SENSOR_GAIN * float(left_colour_sensor.value()) / ev3devrobot.MAX_SENSOR
+        rsv = ev3devrobot.SENSOR_GAIN * float(right_colour_sensor.value()) / ev3devrobot.MAX_SENSOR
 
-        luv = 1.0 - max(0.0, min(1.0, float(lu.value()) / 200.0))
-        ruv = 1.0 - max(0.0, min(1.0, float(ru.value()) / 200.0))
+        luv = 1.0 - max(0.0, min(1.0, float(left_ultrasonic_sensor.value()) / 200.0))
+        ruv = 1.0 - max(0.0, min(1.0, float(right_ultrasonic_sensor.value()) / 200.0))
 
         Leds.set(Leds.LEFT, brightness_pct=lsv)
         Leds.set(Leds.RIGHT, brightness_pct=rsv)
