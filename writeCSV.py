@@ -1,5 +1,5 @@
 import csv
-
+from pathlib import Path
 
 class WriteCSV:
 
@@ -8,6 +8,11 @@ class WriteCSV:
         self.file = None
 
     def openFile(self):
+        fileCheck = Path(self.filename)
+        if fileCheck.is_file():
+            file = open(self.filename, 'w')
+            file.close()
+
         file = open(self.filename, 'a', newline="")
         self.file = file
 
