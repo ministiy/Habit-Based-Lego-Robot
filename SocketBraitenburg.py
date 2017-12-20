@@ -362,9 +362,10 @@ while True:
 while True:
     k = mySocket.recv(2048).decode()
     if k == 'q':
-        exit()
+        break
 
 # Close the socket after the program has quit from the server side
 mySocket.close()
+print("Socket closed")
 cleanup()
 
