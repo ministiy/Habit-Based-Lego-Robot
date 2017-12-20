@@ -217,9 +217,11 @@ start_time = time()
 
 it = 0
 
+"""""
 # Initialize the class for writing CSV
 writer = WriteCSV('output.csv')
 writer.writeHeader()
+"""
 
 #Host IP is IPv4 address of the computer found by Connection Information on Linux
 host = '192.168.1.69'
@@ -235,7 +237,7 @@ startNewThread('Thread-1')
 print("Thread created")
 
 try:
-    output_file = writer.openFile()
+    'output_file = writer.openFile()'
 
     while True:
         k = mySocket.recv(2048).decode()
@@ -310,7 +312,7 @@ try:
         start_time = time()
 
 finally:
-    writer.closeFile(output_file)
+    'writer.closeFile(output_file)'
     # Close the socket after the program has quit from the server side
     mySocket.close()
 
