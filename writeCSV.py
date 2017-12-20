@@ -9,12 +9,13 @@ class WriteCSV:
 
     def openFile(self):
         fileCheck = Path(self.filename)
+        # if file exist, clear the file.
         if fileCheck.is_file():
-            file = open(self.filename, 'w')
-            file.close()
+            self.file = open(self.filename, 'w')
+            #file.close()
 
-        file = open(self.filename, 'a', newline="")
-        self.file = file
+        self.file = open(self.filename, 'a', newline="")
+        #self.file = file
 
     def closeFile(self):
         self.file.close()
@@ -22,9 +23,9 @@ class WriteCSV:
     def writeHeader(self):
         header = ['left sensor', 'right sensor', 'left ultraviolet sensor', 'right ultraviolet sensor', 'left motor',
                   'right motor']
-        with open('output.csv', 'w', newline="") as output_file:
-            wr = csv.writer(output_file, delimiter=',', quoting=csv.QUOTE_ALL)
-            wr.writerow(header)
+        #with open('output.csv', 'w', newline="") as output_file:
+        wr = csv.writer(output_file, delimiter=',', quoting=csv.QUOTE_ALL)
+        wr.writerow(header)
 
     def writeData(self, sensor_motor_values):
         # writing to a csv file called output.csv to store sensory-motor data where

@@ -118,8 +118,8 @@ def sensorValues(threadName):
         if exitFlag:
             threadName.exit()
         ## normalized to lie between 0 and 1 (1 close, 0 far)
-        lsv = SENSOR_GAIN * float(ls.value()) / MAX_SENSOR
-        rsv = SENSOR_GAIN * float(rs.value()) / MAX_SENSOR
+        lsv = ev3devrobot.SENSOR_GAIN * float(ls.value()) / ev3devrobot.MAX_SENSOR
+        rsv = ev3devrobot.SENSOR_GAIN * float(rs.value()) / ev3devrobot.MAX_SENSOR
 
         luv = 1.0 - max(0.0, min(1.0, float(lu.value()) / 200.0))
         ruv = 1.0 - max(0.0, min(1.0, float(ru.value()) / 200.0))
@@ -181,7 +181,7 @@ def startNewThread(name):
 def Main():
 
     #Host IP is IPv4 address of the computer found by Connection Information on Linux
-    host = '192.168.99.1'
+    host = '192.168.100.17'
     port = 8000
     global mySocket
     mySocket = socket.socket()
