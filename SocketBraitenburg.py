@@ -189,7 +189,8 @@ def sensorValues(threadName):
         lmv = motor_left.speed
         rmv = motor_right.speed
 
-
+        motor_left.run_forever(speed_sp=lmv)
+        motor_right.run_forever(speed_sp=rmv)
         # writing to a csv file called output.csv to store sensory-motor data where
         #   lsv = left colour sensor value
         #   rsv = right colour sensor value
@@ -225,13 +226,6 @@ def startNewThread(name):
 
 # ==============================================
 
-def startNewExitThread(name):
-    # Create a new daemon thread just for checking if user has quit the program
-    thread2 = ExitBackgroundThread(1, "Thread-Exit", 1)
-    thread2.daemon = True
-    thread2.start()
-
-# ==============================================
 
 btn.on_left = left
 btn.on_right = right
@@ -262,15 +256,13 @@ print("Socket connected to {0}".format(host))
 
 print("Starting new thread to send sensor values")
 startNewThread('Thread-1')
-print("Sensor thread created")
-startNewExitThread('Thread-Exit')
-print("Exit thread created")
+print("Thread created")
 
 'try:'
 'output_file = writer.openFile()'
 
 
-
+"""""
 while True:
 
     if exitFlag == 0:
@@ -317,10 +309,10 @@ while True:
     #     OUTPUT_GAIN *= 1.05
     #     print('OUTPUT_GAIN increased to : %f' %(OUTPUT_GAIN))
 
-    """""
+
     if (it % 10) == 0:
-        print('ls: %0.3f rs:%0.3f lm: %0.3f rm:%0.3f' % (lsv, rsv, lmv, rmv))
-    """
+       print('ls: %0.3f rs:%0.3f lm: %0.3f rm:%0.3f' % (lsv, rsv, lmv, rmv))
+
 
     lmv = int(max(-1000, min(1000, MAX_MOTOR * lmv)))
     rmv = int(max(-1000, min(1000, MAX_MOTOR * rmv)))
@@ -328,10 +320,10 @@ while True:
     motor_left.run_forever(speed_sp=lmv)
     motor_right.run_forever(speed_sp=rmv)
 
-    """""
+
     sensor_motor_values = [lsv, rsv, luv, ruv, lmv, rmv]
     writer.writeData(sensor_motor_values, output_file)
-    """
+
     btn.process()  # Check for currently pressed buttons.
 
     it_duration = time.time() - start_time
@@ -342,8 +334,12 @@ while True:
 
     start_time = time.time()
 
-'finally:'
-'writer.closeFile(output_file)'
+"""""
+while True:
+    k = mySocket.recv(2048).decode()
+    if k == 'q':
+        exit()
+
 # Close the socket after the program has quit from the server side
 mySocket.close()
 
