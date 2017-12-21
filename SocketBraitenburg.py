@@ -30,12 +30,14 @@ class SensorBackgroundThread (threading.Thread):
 # commented this out to reduce annoying beep
 # Sound.beep()
 
+"""
 MAX_SENSOR = 100.0  # percent
 MAX_MOTOR = 1000.0
 
 BIAS = 0.05
 SENSOR_GAIN = 1.0
 OUTPUT_GAIN = 1.0
+"""
 
 Leds.set_color(Leds.LEFT, Leds.YELLOW)
 Leds.set_color(Leds.RIGHT, Leds.YELLOW)
@@ -91,7 +93,7 @@ def cleanup():
     exit()
 
 
-btn = Button()
+btn = button()
 
 # ===============================================
 
