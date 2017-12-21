@@ -87,6 +87,8 @@ right_ultrasonic_sensor.mode = 'US-DIST-CM'
 
 def cleanup():
     print('cleaning up...')
+    mySocket.close()
+    print("Socket closed")
     motor_left.stop()
     motor_right.stop()
     print('quiting')
@@ -274,7 +276,6 @@ while True:
         break
 
 # Close the socket after the program has quit from the server side
-mySocket.close()
-print("Socket closed")
+# mySocket.close()
 cleanup()
 
