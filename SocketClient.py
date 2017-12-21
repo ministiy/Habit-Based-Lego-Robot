@@ -2,6 +2,7 @@ import socket
 from ev3dev.ev3 import *
 import pickle
 import threading
+from Ev3devSetup import Ev3devSetup
 
 # ============================================
 # A thread class from https://www.tutorialspoint.com/python/python_multithreading.htm
@@ -19,6 +20,28 @@ class SensorBackgroundThread (threading.Thread):
 
 # =============================================
 
+#Setting up with MAX_SENSOR, MAX_MOTOR, BIAS, SENSOR_GAIN, OUTPUT_GAIN
+ev3devrobot = Ev3devSetup()
+
+motor_left = ev3devrobot.initLargeMotor('outB')
+motor_left.reset()
+
+motor_right = ev3devrobot.initLargeMotor('outC')
+motor_right.reset()
+
+left_colour_sensor = ev3devrobot.initColorSensor('in2')
+left_colour_sensor.mode = 'COL-AMBIENT'
+
+right_colour_sensor = ev3devrobot.initColorSensor('in3')
+right_colour_sensor.mode = 'COL-AMBIENT'
+
+left_ultrasonic_sensor = ev3devrobot.initUltraSonicSensor('in1')
+left_ultrasonic_sensor.mode = 'US-DIST-CM'
+
+right_ultrasonic_sensor = ev3devrobot.initUltraSonicSensor('in4')
+right_ultrasonic_sensor.mode = 'US-DIST-CM'
+
+"""
 # Setting up constants and variables before actually starting up the program
 MAX_SENSOR = 100.0 # percent
 MAX_MOTOR = 1000.0
@@ -45,7 +68,7 @@ lu = UltrasonicSensor('in1')
 lu.mode='US-DIST-CM'
 ru = UltrasonicSensor('in4')
 ru.mode='US-DIST-CM'
-
+"""
 # ==== ROBOT MOVEMENT FUNCTIONS === #
 # ==============================================
 
@@ -95,11 +118,11 @@ def sensorValues(threadName):
         if exitFlag:
             threadName.exit()
         ## normalized to lie between 0 and 1 (1 close, 0 far)
-        lsv = SENSOR_GAIN * float(ls.value()) / MAX_SENSOR
-        rsv = SENSOR_GAIN * float(rs.value()) / MAX_SENSOR
+        lsv = ev3devrobot.SENSOR_GAIN * float(left_colour_sensor.value()) / ev3devrobot.MAX_SENSOR
+        rsv = ev3devrobot.SENSOR_GAIN * float(right_colour_sensor.value()) / ev3devrobot.MAX_SENSOR
 
-        luv = 1.0 - max(0.0, min(1.0, float(lu.value()) / 200.0))
-        ruv = 1.0 - max(0.0, min(1.0, float(ru.value()) / 200.0))
+        luv = 1.0 - max(0.0, min(1.0, float(left_ultrasonic_sensor.value()) / 200.0))
+        ruv = 1.0 - max(0.0, min(1.0, float(right_ultrasonic_sensor.value()) / 200.0))
 
         Leds.set(Leds.LEFT, brightness_pct=lsv)
         Leds.set(Leds.RIGHT, brightness_pct=rsv)
@@ -161,10 +184,14 @@ def Main():
     host = '192.168.1.69'
     port = 5000
     global mySocket
-    mySocket = socket.socket()
+    print("Creating socket")
+    mySocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     mySocket.connect((host, port))
+    print("Socket connected to {0}".format(host))
 
+    print("Starting new thread to send sensor values")
     startNewThread('Thread-1')
+    print("Thread created")
 
     # Commands received from the server are translated into actual robot movements
     while True:
@@ -182,7 +209,7 @@ def Main():
         if k == 'p':
             stop()
         if k == 'q':
-            exit()
+            break
 
     # Close the socket after the program has quit from the server side
     mySocket.close()
