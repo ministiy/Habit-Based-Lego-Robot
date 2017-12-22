@@ -209,7 +209,7 @@ def Main():
         if k == 'p':
             stop()
         if k == 'q':
-            exit()
+            break
 
     # Close the socket after the program has quit from the server side
     mySocket.close()
