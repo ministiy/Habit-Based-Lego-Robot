@@ -30,12 +30,14 @@ class SensorBackgroundThread (threading.Thread):
 # commented this out to reduce annoying beep
 # Sound.beep()
 
+"""
 MAX_SENSOR = 100.0  # percent
 MAX_MOTOR = 1000.0
 
 BIAS = 0.05
 SENSOR_GAIN = 1.0
 OUTPUT_GAIN = 1.0
+"""
 
 Leds.set_color(Leds.LEFT, Leds.YELLOW)
 Leds.set_color(Leds.RIGHT, Leds.YELLOW)
@@ -85,46 +87,48 @@ right_ultrasonic_sensor.mode = 'US-DIST-CM'
 
 def cleanup():
     print('cleaning up...')
+    mySocket.close()
+    print("Socket closed")
     motor_left.stop()
     motor_right.stop()
     print('quiting')
     exit()
 
 
-btn = Button()
+btn = button()
 
 # ===============================================
 
 # Do something when state of any button changes:
 def right(state):  # neater use of 'if' follows:
-    global SENSOR_GAIN
+    #global SENSOR_GAIN
     if state:
-        SENSOR_GAIN += 0.05
-        print('SENSOR_GAIN:', SENSOR_GAIN)
+        ev3devrobot.SENSOR_GAIN += 0.05
+        print('SENSOR_GAIN:', ev3devrobot.SENSOR_GAIN)
 
 # ===============================================
 
 def left(state):
-    global SENSOR_GAIN
+    #global SENSOR_GAIN
     if state:
-        SENSOR_GAIN -= 0.01
-        print('SENSOR_GAIN:', SENSOR_GAIN)
+        ev3devrobot.SENSOR_GAIN -= 0.01
+        print('SENSOR_GAIN:', ev3devrobot.SENSOR_GAIN)
 
 # ===============================================
 
 def up(state):
-    global OUTPUT_GAIN
+    #global OUTPUT_GAIN
     if state:
-        OUTPUT_GAIN += 0.5
-        print('OUTPUT_GAIN:', OUTPUT_GAIN)
+        ev3devrobot.OUTPUT_GAIN += 0.5
+        print('OUTPUT_GAIN:', ev3devrobot.OUTPUT_GAIN)
 
 # ===============================================
 
 def down(state):
-    global OUTPUT_GAIN
+    #global OUTPUT_GAIN
     if state:
-        OUTPUT_GAIN -= 0.1
-        print('OUTPUT_GAIN:', OUTPUT_GAIN)
+        ev3devrobot.OUTPUT_GAIN -= 0.1
+        print('OUTPUT_GAIN:', ev3devrobot.OUTPUT_GAIN)
 
 # ===============================================
 
@@ -173,15 +177,15 @@ def sensorValues(threadName):
         'rmv = motor_right.speed'
 
         ## AGGR
-        lmv = BIAS + rsv - 0.0 * lsv - (ruv * 2.)
-        rmv = BIAS + lsv - 0.0 * rsv - (luv * 2.)
+        lmv = ev3devrobot.BIAS + rsv - 0.0 * lsv - (ruv * 2.)
+        rmv = ev3devrobot.BIAS + lsv - 0.0 * rsv - (luv * 2.)
 
-        lmv *= OUTPUT_GAIN
-        rmv *= OUTPUT_GAIN
+        lmv *= ev3devrobot.OUTPUT_GAIN
+        rmv *= ev3devrobot.OUTPUT_GAIN
 
-        if max(lmv, rmv) > MAX_MOTOR:
-            lmv -= max_mv - MAX_MOTOR
-            rmv -= max_mv - MAX_MOTOR
+        if max(lmv, rmv) > ev3devrobot.MAX_MOTOR:
+            lmv -= max_mv - ev3devrobot.MAX_MOTOR
+            rmv -= max_mv - ev3devrobot.MAX_MOTOR
             # OUTPUT_GAIN *= 0.95
             # print('OUTPUT_GAIN decreased to : %f' %(OUTPUT_GAIN))
 
@@ -193,8 +197,8 @@ def sensorValues(threadName):
         if (it % 10) == 0:
             print('ls: %0.3f rs:%0.3f lm: %0.3f rm:%0.3f' % (lsv, rsv, lmv, rmv))
 
-        lmv = int(max(-1000, min(1000, MAX_MOTOR * lmv)))
-        rmv = int(max(-1000, min(1000, MAX_MOTOR * rmv)))
+        lmv = int(max(-1000, min(1000, ev3devrobot.MAX_MOTOR * lmv)))
+        rmv = int(max(-1000, min(1000, ev3devrobot.MAX_MOTOR * rmv)))
 
         motor_left.run_forever(speed_sp=lmv)
         motor_right.run_forever(speed_sp=rmv)
@@ -253,7 +257,7 @@ writer.writeHeader()
 """
 
 #Host IP is IPv4 address of the computer found by Connection Information on Linux
-host = '192.168.1.69'
+host = '192.168.100.17'
 port = 5000
 global mySocket
 print("Creating socket")
@@ -272,7 +276,6 @@ while True:
         break
 
 # Close the socket after the program has quit from the server side
-mySocket.close()
-print("Socket closed")
+# mySocket.close()
 cleanup()
 
