@@ -1,4 +1,4 @@
-    import socket
+import socket
 from ev3dev.ev3 import *
 import pickle
 import threading
