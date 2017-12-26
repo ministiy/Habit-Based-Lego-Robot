@@ -90,8 +90,8 @@ def cleanup():
     print('cleaning up...')
     mySocket.close()
     print("Socket closed")
-    motor_left.stop()
-    motor_right.stop()
+    stopMotor()
+    print("Motor stopped")
     print('quiting')
     exit()
 
@@ -141,6 +141,12 @@ def enter(state):
 def backspace(state):
     print('Backspace button pressed' if state else 'Backspace button released')
     cleanup()
+
+# ===============================================
+
+def stopMotor():
+    motor_left.stop()
+    motor_right.stop()
 
 # ===============================================
 
