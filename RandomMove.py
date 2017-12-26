@@ -11,7 +11,7 @@ import socket
 import time
 import random
 
-buttonValues = {1: "Up", 2: "Down", 3: "Left", 4: "Right"}
+
 
 # ============================================
 # A thread class from https://www.tutorialspoint.com/python/python_multithreading.htm
@@ -54,8 +54,7 @@ def cleanup():
     print('cleaning up...')
     mySocket.close()
     print("Socket closed")
-    motor_left.stop()
-    motor_right.stop()
+    stopMotor()
     print('quiting')
     exit()
 
@@ -108,19 +107,31 @@ def backspace(state):
 
 # ===============================================
 
+def stopMotor():
+    motor_left.stop()
+    motor_right.stop()
+
+# ===============================================
+
 def sensorValues(threadName):
 
+	buttonValues = {0: "Forward", 1: "Back", 2: "Left", 3: "Right"}
+
 	while True:
-		# get random number to determine if the robot is going to move up, down, right or left
+		# get random number to determine if the robot is going to move forward, back, right or left
 		num = random.randrange(4)
 		if num == 0:
-			pass
+			motor_left.run_timed(speed_sp=450, time_sp=100)
+			motor_right.run_timed(speed_sp=450, time_sp=100)
 		elif num == 1:
-			pass
+			motor_left.run_timed(speed_sp=-450, time_sp=100)
+			motor_right.run_timed(speed_sp=-450, time_sp=100)
 		elif num == 2:
-			pass
+			motor_left.run_timed(speed_sp=450, time_sp=100)
+			motor_right.run_timed(speed_sp=-450, time_sp=100)
 		elif num == 3:
-			pass
+			motor_left.run_timed(speed_sp=-450, time_sp=100)
+			motor_right.run_timed(speed_sp=450, time_sp=100)
 
 # ==============================================
 
@@ -129,6 +140,13 @@ def startNewThread(name):
     thread1 = SensorBackgroundThread(1, "Thread-1", 1)
     thread1.daemon = True
     thread1.start()
+
+btn.on_left = left
+btn.on_right = right
+btn.on_up = up
+btn.on_down = down
+btn.on_enter = enter
+btn.on_backspace = backspace
 
 host = '192.168.100.17'
 port = 5000
