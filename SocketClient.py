@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 import socket
 from ev3dev.ev3 import *
 import pickle
