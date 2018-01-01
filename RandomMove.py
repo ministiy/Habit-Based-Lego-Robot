@@ -9,8 +9,9 @@ import threading
 from Ev3devSetup import Ev3devSetup
 import socket
 import time
+import random
 
-exitFlag = 1
+
 
 # ============================================
 # A thread class from https://www.tutorialspoint.com/python/python_multithreading.htm
@@ -25,43 +26,6 @@ class SensorBackgroundThread (threading.Thread):
     def run(self):
         while True:
             sensorValues(self.name)
-
-# ============================================
-
-# commented this out to reduce annoying beep
-# Sound.beep()
-
-"""
-MAX_SENSOR = 100.0  # percent
-MAX_MOTOR = 1000.0
-
-BIAS = 0.05
-SENSOR_GAIN = 1.0
-OUTPUT_GAIN = 1.0
-"""
-
-Leds.set_color(Leds.LEFT, Leds.YELLOW)
-Leds.set_color(Leds.RIGHT, Leds.YELLOW)
-
-"""
-lm = LargeMotor('outB')
-rm = LargeMotor('outC')
-lm.reset()
-rm.reset()
-b = Button()
-
-ls = ColorSensor('in2')
-# assert ls.connected, "Left sensor not connected to port 2"
-rs = ColorSensor('in3')
-# assert rs.connected, "Right sensor not connected to port 3"
-ls.mode = 'COL-AMBIENT'
-rs.mode = 'COL-AMBIENT'
-
-lu = UltrasonicSensor('in1')
-lu.mode = 'US-DIST-CM'
-ru = UltrasonicSensor('in4')
-ru.mode = 'US-DIST-CM'
-"""
 
 #Setting up with MAX_SENSOR, MAX_MOTOR, BIAS, SENSOR_GAIN, OUTPUT_GAIN
 ev3devrobot = Ev3devSetup()
@@ -152,15 +116,11 @@ def stopMotor():
 
 def sensorValues(threadName):
 
-    # Get original time as a basis to run the following code every n seconds (where n <= 0.1)
-    starttime = time.time()
-    'exitFlag = 0'
+	buttonValues = {0: "Forward", 1: "Back", 2: "Left", 3: "Right"}
 
-    while True:
-        'if exitFlag:'
-        '   threadName.exit()'
-        ## normalized to lie between 0 and 1 (1 close, 0 far)
-        lsv = ev3devrobot.SENSOR_GAIN * float(left_colour_sensor.value()) / ev3devrobot.MAX_SENSOR
+	while True:
+		it += 1
+		lsv = ev3devrobot.SENSOR_GAIN * float(left_colour_sensor.value()) / ev3devrobot.MAX_SENSOR
         rsv = ev3devrobot.SENSOR_GAIN * float(right_colour_sensor.value()) / ev3devrobot.MAX_SENSOR
 
         luv = 1.0 - max(0.0, min(1.0, float(left_ultrasonic_sensor.value()) / 200.0))
@@ -207,32 +167,27 @@ def sensorValues(threadName):
         lmv = int(max(-1000, min(1000, ev3devrobot.MAX_MOTOR * lmv)))
         rmv = int(max(-1000, min(1000, ev3devrobot.MAX_MOTOR * rmv)))
 
-        motor_left.run_forever(speed_sp=lmv)
-        motor_right.run_forever(speed_sp=rmv)
-        # writing to a csv file called output.csv to store sensory-motor data where
-        #   lsv = left colour sensor value
-        #   rsv = right colour sensor value
-        #   luv = left ultraviolet sensor value
-        #   ruv = right ultraviolet sensor value
-        #   lmv = left motor value
-        #   rmv = right motor value
-        #sensor_motor_values = [lsv, rsv, luv, ruv, lmv, rmv]
-        #writer.writeData(sensor_motor_values)
-
-        #with open('output.csv', 'a', newline="") as output_file:
-            #wr = csv.writer(output_file, delimiter=',', quoting=csv.QUOTE_ALL)
-            #wr.writerow([lsv, rsv, luv, ruv, lmv, rmv])
-        #print('ls:%0.3f rs:%0.3f lu:%0.3f ru:%0.3f lm:%0.3f rm:%0.3f' % (lsv, rsv, luv, ruv, lmv, rmv))
-
-        # Time period to wait until new sensor values are taken. Currently values are taken every 0.05 seconds.
-        # To change this, change X in
-        #   time.sleep(X - ((time.time() - starttime) % X))
+        # get random number to determine if the robot is going to move forward, back, right or left
+		num = random.randrange(4)
+		if num == 0:
+			motor_left.run_timed(speed_sp=450, time_sp=100)
+			motor_right.run_timed(speed_sp=450, time_sp=100)
+		elif num == 1:
+			motor_left.run_timed(speed_sp=-450, time_sp=100)
+			motor_right.run_timed(speed_sp=-450, time_sp=100)
+		elif num == 2:
+			motor_left.run_timed(speed_sp=450, time_sp=100)
+			motor_right.run_timed(speed_sp=-450, time_sp=100)
+		elif num == 3:
+			motor_left.run_timed(speed_sp=-450, time_sp=100)
+			motor_right.run_timed(speed_sp=450, time_sp=100)
 
         listOfValues = [lsv, rsv, luv, ruv, lmv, rmv]
         dataString = pickle.dumps(listOfValues)
         mySocket.send(dataString)
 
         time.sleep(0.05 - ((time.time() - starttime) % 0.05))
+
 
 # ==============================================
 
@@ -242,9 +197,6 @@ def startNewThread(name):
     thread1.daemon = True
     thread1.start()
 
-# ==============================================
-
-
 btn.on_left = left
 btn.on_right = right
 btn.on_up = up
@@ -252,18 +204,7 @@ btn.on_down = down
 btn.on_enter = enter
 btn.on_backspace = backspace
 
-target_ips = 0.1
-start_time = time.time()
-
 it = 0
-
-"""""
-# Initialize the class for writing CSV
-writer = WriteCSV('output.csv')
-writer.writeHeader()
-"""
-
-#Host IP is IPv4 address of the computer found by Connection Information on Linux
 host = '192.168.100.17'
 port = 5000
 global mySocket
@@ -286,3 +227,5 @@ while True:
 # mySocket.close()
 cleanup()
 
+
+	
