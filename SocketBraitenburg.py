@@ -96,7 +96,7 @@ def cleanup():
     exit()
 
 
-btn = button()
+
 
 # ===============================================
 
@@ -244,6 +244,7 @@ def startNewThread(name):
 
 # ==============================================
 
+btn = Button()
 
 btn.on_left = left
 btn.on_right = right
@@ -264,7 +265,7 @@ writer.writeHeader()
 """
 
 #Host IP is IPv4 address of the computer found by Connection Information on Linux
-host = '192.168.100.17'
+host = '192.168.1.66'
 port = 5000
 global mySocket
 print("Creating socket")
