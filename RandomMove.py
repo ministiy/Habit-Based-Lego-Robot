@@ -206,7 +206,7 @@ btn.on_enter = enter
 btn.on_backspace = backspace
 
 it = 0
-host = '192.168.100.17'
+host = '192.168.1.66'
 port = 5000
 global mySocket
 print("Creating socket")
