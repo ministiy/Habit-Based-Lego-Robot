@@ -60,8 +60,6 @@ def cleanup():
     exit()
 
 
-btn = button()
-
 # ===============================================
 
 # Do something when state of any button changes:
@@ -115,12 +113,14 @@ def stopMotor():
 # ===============================================
 
 def sensorValues(threadName):
+    it = 0
+    # Get original time as a basis to run the following code every n seconds (where n <= 0.1)
+    starttime = time.time()
+    buttonValues = {0: "Forward", 1: "Back", 2: "Left", 3: "Right"}
 
-	buttonValues = {0: "Forward", 1: "Back", 2: "Left", 3: "Right"}
-
-	while True:
-		it += 1
-		lsv = ev3devrobot.SENSOR_GAIN * float(left_colour_sensor.value()) / ev3devrobot.MAX_SENSOR
+    while True:
+        it += 1
+        lsv = ev3devrobot.SENSOR_GAIN * float(left_colour_sensor.value()) / ev3devrobot.MAX_SENSOR
         rsv = ev3devrobot.SENSOR_GAIN * float(right_colour_sensor.value()) / ev3devrobot.MAX_SENSOR
 
         luv = 1.0 - max(0.0, min(1.0, float(left_ultrasonic_sensor.value()) / 200.0))
@@ -168,19 +168,19 @@ def sensorValues(threadName):
         rmv = int(max(-1000, min(1000, ev3devrobot.MAX_MOTOR * rmv)))
 
         # get random number to determine if the robot is going to move forward, back, right or left
-		num = random.randrange(4)
-		if num == 0:
-			motor_left.run_timed(speed_sp=450, time_sp=100)
-			motor_right.run_timed(speed_sp=450, time_sp=100)
-		elif num == 1:
-			motor_left.run_timed(speed_sp=-450, time_sp=100)
-			motor_right.run_timed(speed_sp=-450, time_sp=100)
-		elif num == 2:
-			motor_left.run_timed(speed_sp=450, time_sp=100)
-			motor_right.run_timed(speed_sp=-450, time_sp=100)
-		elif num == 3:
-			motor_left.run_timed(speed_sp=-450, time_sp=100)
-			motor_right.run_timed(speed_sp=450, time_sp=100)
+        num = random.randrange(4)
+        if num == 0:
+            motor_left.run_timed(speed_sp=450, time_sp=100)
+            motor_right.run_timed(speed_sp=450, time_sp=100)
+        elif num == 1:
+            motor_left.run_timed(speed_sp=-450, time_sp=100)
+            motor_right.run_timed(speed_sp=-450, time_sp=100)
+        elif num == 2:
+            motor_left.run_timed(speed_sp=450, time_sp=100)
+            motor_right.run_timed(speed_sp=-450, time_sp=100)
+        elif num == 3:
+            motor_left.run_timed(speed_sp=-450, time_sp=100)
+            motor_right.run_timed(speed_sp=450, time_sp=100)
 
         listOfValues = [lsv, rsv, luv, ruv, lmv, rmv]
         dataString = pickle.dumps(listOfValues)
@@ -197,6 +197,7 @@ def startNewThread(name):
     thread1.daemon = True
     thread1.start()
 
+btn = Button()
 btn.on_left = left
 btn.on_right = right
 btn.on_up = up
