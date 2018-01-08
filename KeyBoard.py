@@ -166,9 +166,9 @@ def sensorValues(threadName):
         listOfValues = [1,2,3,4,5,6]
 
 
-        package+=listOfValues
+        package = package + listOfValues
         packageSize+=1
-
+        print(packageSize)
         if packageSize==10:
             print(package)
             dataString = pickle.dumps(package)
