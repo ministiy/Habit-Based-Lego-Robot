@@ -97,6 +97,7 @@ def Main():
 
         print("sending: " + str(k))
         conn.send(k.encode())
+        print("Sent")
 
         if k == 'q':
             break;
