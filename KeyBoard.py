@@ -10,7 +10,6 @@ from Ev3devSetup import Ev3devSetup
 # A thread class from https://www.tutorialspoint.com/python/python_multithreading.htm
 # This thread class represents a background thread on the robot to collect sensor-motor data and send it back
 # to the server.
-'''
 class SensorBackgroundThread (threading.Thread):
     def __init__(self, threadID, name, counter):
         threading.Thread.__init__(self)
@@ -20,7 +19,6 @@ class SensorBackgroundThread (threading.Thread):
     def run(self):
         while True:
             sensorValues(self.name)
-'''
 # =============================================
 
 #Setting up with MAX_SENSOR, MAX_MOTOR, BIAS, SENSOR_GAIN, OUTPUT_GAIN
@@ -115,7 +113,7 @@ def sensorValues(threadName):
 
     # Get original time as a basis to run the following code every n seconds (where n <= 0.1)
     starttime = time.time()
-    exitFlag = 0
+    packageSize = 0
 
     while True:
         ## normalized to lie between 0 and 1 (1 close, 0 far)
@@ -162,10 +160,18 @@ def sensorValues(threadName):
         # To change this, change X in
         #   time.sleep(X - ((time.time() - starttime) % X))
 
+        package = []
+
         listOfValues = [lsv, rsv, luv, ruv, lmv, rmv]
-        dataString = pickle.dumps(listOfValues)
         print(listOfValues)
-        mySocket.send(dataString)
+
+        package+=listOfValues
+        packageSize+=1
+
+        if packageSize==10:
+            dataString = pickle.dumps(package)
+            mySocket.send(dataString)
+            packageSize=0
 
         time.sleep(0.05 - ((time.time() - starttime) % 0.05))
 
@@ -191,11 +197,9 @@ def Main():
     mySocket.connect((host, port))
     print("Socket connected to {0}".format(host))
 
-    '''
     print("Starting new thread to send sensor values")
     startNewThread('Thread-1')
     print("Thread created")
-    '''
 
     # Commands received from the server are translated into actual robot movements
     while True:
