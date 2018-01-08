@@ -265,7 +265,8 @@ writer.writeHeader()
 """
 
 #Host IP is IPv4 address of the computer found by Connection Information on Linux
-host = '192.168.1.66'
+#host = '192.168.1.66'
+host = '172.24.38.156'
 port = 5000
 global mySocket
 print("Creating socket")
