@@ -200,6 +200,7 @@ def Main():
         k = mySocket.recv(2048).decode()
 
         print('Received from server: ' + k)
+        '''
         if k == 'w':
             forward()
         if k == 's':
@@ -210,6 +211,7 @@ def Main():
             right()
         if k == 'p':
             stop()
+        '''
         if k == 'q':
             break
 
