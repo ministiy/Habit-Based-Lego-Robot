@@ -2,11 +2,12 @@
 
 import socket
 from ev3dev.ev3 import *
+from time import sleep, time
 import pickle
 import threading
 from Ev3devSetup import Ev3devSetup
 import time
-from time import sleep, time
+
 
 # ============================================
 # A thread class from https://www.tutorialspoint.com/python/python_multithreading.htm
