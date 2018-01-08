@@ -183,7 +183,7 @@ def startNewThread(name):
 def Main():
 
     #Host IP is IPv4 address of the computer found by Connection Information on Linux
-    host = '172.24.38.156'
+    host = '172.24.9.187'
     port = 5000
     global mySocket
     print("Creating socket")
