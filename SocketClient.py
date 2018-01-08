@@ -167,7 +167,7 @@ def sensorValues(threadName):
         listOfValues = [lsv, rsv, luv, ruv, lmv, rmv]
         #print(listOfValues)
         dataString = pickle.dumps(listOfValues)
-        mySocket.sendall(dataString)
+        mySocket.send(dataString)
 
         time.sleep(0.05 - ((time.time() - starttime) % 0.05))
 
@@ -183,10 +183,9 @@ def startNewThread(name):
 
 # Code is based on https://stackoverflow.com/questions/41294848/python-sockets-how-to-connect-between-two-computers-on-the-same-wifi
 def Main():
-    '''
     #Host IP is IPv4 address of the computer found by Connection Information on Linux
-    #host = '192.168.1.66'
-    host = '172.24.38.156'
+    host = '192.168.1.66'
+    #host = '172.24.38.156'
     port = 5000
     global mySocket
     print("Creating socket")
@@ -220,28 +219,7 @@ def Main():
 
     # Close the socket after the program has quit from the server side
     mySocket.close()
-    '''
-    # Host IP is IPv4 address of the computer found by Connection Information on Linux
-    # host = '192.168.1.66'
-    host = '172.24.38.156'
-    port = 5000
-    global mySocket
-    print("Creating socket")
-    mySocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    mySocket.connect((host, port))
-    print("Socket connected to {0}".format(host))
 
-    print("Starting new thread to send sensor values")
-    startNewThread('Thread-1')
-    print("Thread created")
-
-    # Check on main thread if the user quits the program
-    while True:
-        k = mySocket.recv(2048).decode()
-        print(k, flush=True)
-        if k == 'q':
-            break
-    mySocket.close()
 
 if __name__ == '__main__':
     Main()
