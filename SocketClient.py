@@ -117,8 +117,6 @@ def sensorValues(threadName):
     exitFlag = 0
 
     while True:
-        if exitFlag:
-            threadName.exit()
         ## normalized to lie between 0 and 1 (1 close, 0 far)
         lsv = ev3devrobot.SENSOR_GAIN * float(left_colour_sensor.value()) / ev3devrobot.MAX_SENSOR
         rsv = ev3devrobot.SENSOR_GAIN * float(right_colour_sensor.value()) / ev3devrobot.MAX_SENSOR
@@ -166,7 +164,7 @@ def sensorValues(threadName):
         listOfValues = [lsv, rsv, luv, ruv, lmv, rmv]
         #print(listOfValues)
         dataString = pickle.dumps(listOfValues)
-        mySocket.send(dataString.encode())
+        mySocket.send(dataString)
 
         time.sleep(0.05 - ((time.time() - starttime) % 0.05))
 
