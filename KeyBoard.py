@@ -114,6 +114,7 @@ def sensorValues(threadName):
     # Get original time as a basis to run the following code every n seconds (where n <= 0.1)
     starttime = time.time()
     packageSize = 0
+    package = []
 
     while True:
         ## normalized to lie between 0 and 1 (1 close, 0 far)
@@ -160,7 +161,7 @@ def sensorValues(threadName):
         # To change this, change X in
         #   time.sleep(X - ((time.time() - starttime) % X))
 
-        package = []
+
 
         #listOfValues = [lsv, rsv, luv, ruv, lmv, rmv]
         listOfValues = [1,2,3,4,5,6]
@@ -175,6 +176,7 @@ def sensorValues(threadName):
             dataString = pickle.dumps(package)
             mySocket.send(dataString)
             packageSize=0
+            package = []
 
         time.sleep(0.05 - ((time.time() - starttime) % 0.05))
 
