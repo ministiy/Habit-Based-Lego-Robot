@@ -162,7 +162,8 @@ def sensorValues(threadName):
 
         package = []
 
-        listOfValues = [lsv, rsv, luv, ruv, lmv, rmv]
+        #listOfValues = [lsv, rsv, luv, ruv, lmv, rmv]
+        listOfValues = [1,2,3,4]
         print(listOfValues)
 
         package+=listOfValues
