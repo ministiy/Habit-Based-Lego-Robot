@@ -22,8 +22,9 @@ class CSVBackgroundThread (threading.Thread):
             listOfValues = pickle.loads(data)
             for i in range(0,10):
                 print('ls:%0.3f rs:%0.3f lu:%0.3f ru:%0.3f lm:%0.3f rm:%0.3f' % (listOfValues[0], listOfValues[1], listOfValues[2], listOfValues[3], listOfValues[4], listOfValues[5]))
+                self.writer.writeData(listOfValues[:5])
                 listOfValues = listOfValues[6:]
-            self.writer.writeData(listOfValues)
+
 
 # ==== CSV FUNCTIONS ==== #
 # ==============================================
