@@ -199,7 +199,7 @@ def Main():
     while True:
         k = mySocket.recv(2048).decode()
 
-        print('Received from server: ' + k, flush=True)
+        #print('Received from server: ' + k, flush=True)
         '''
         if k == 'w':
             forward()
