@@ -154,7 +154,8 @@ def sensorValues(threadName):
 
     # Get original time as a basis to run the following code every n seconds (where n <= 0.1)
     starttime = time.time()
-    'exitFlag = 0'
+    packageSize = 0
+    package = []
 
     while True:
         'if exitFlag:'
@@ -227,13 +228,27 @@ def sensorValues(threadName):
         # Time period to wait until new sensor values are taken. Currently values are taken every 0.05 seconds.
         # To change this, change X in
         #   time.sleep(X - ((time.time() - starttime) % X))
-
+        '''
         listOfValues = [lsv, rsv, luv, ruv, lmv, rmv]
         dataString = pickle.dumps(listOfValues)
         mySocket.send(dataString)
 
         time.sleep(0.05 - ((time.time() - starttime) % 0.05))
+        '''
+        listOfValues = [lsv, rsv, luv, ruv, lmv, rmv]
+        package = listOfValues + package
+        print(package)
 
+        packageSize += 1
+        print(packageSize)
+        if packageSize == 10:
+            print(package)
+            dataString = pickle.dumps(package)
+            mySocket.send(dataString)
+            packageSize = 0
+            package = []
+
+        time.sleep(0.05 - ((time.time() - starttime) % 0.05))
 # ==============================================
 
 def startNewThread(name):
