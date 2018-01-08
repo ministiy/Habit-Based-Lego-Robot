@@ -281,6 +281,7 @@ print("Thread created")
 # Check on main thread if the user quits the program
 while True:
     k = mySocket.recv(2048).decode()
+    print(k, flush=True)
     if k == 'q':
         break
 
