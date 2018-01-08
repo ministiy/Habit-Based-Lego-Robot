@@ -10,6 +10,7 @@ from Ev3devSetup import Ev3devSetup
 # A thread class from https://www.tutorialspoint.com/python/python_multithreading.htm
 # This thread class represents a background thread on the robot to collect sensor-motor data and send it back
 # to the server.
+'''
 class SensorBackgroundThread (threading.Thread):
     def __init__(self, threadID, name, counter):
         threading.Thread.__init__(self)
@@ -19,7 +20,7 @@ class SensorBackgroundThread (threading.Thread):
     def run(self):
         while True:
             sensorValues(self.name)
-
+'''
 # =============================================
 
 #Setting up with MAX_SENSOR, MAX_MOTOR, BIAS, SENSOR_GAIN, OUTPUT_GAIN
@@ -117,8 +118,6 @@ def sensorValues(threadName):
     exitFlag = 0
 
     while True:
-        if exitFlag:
-            threadName.exit()
         ## normalized to lie between 0 and 1 (1 close, 0 far)
         lsv = ev3devrobot.SENSOR_GAIN * float(left_colour_sensor.value()) / ev3devrobot.MAX_SENSOR
         rsv = ev3devrobot.SENSOR_GAIN * float(right_colour_sensor.value()) / ev3devrobot.MAX_SENSOR
@@ -192,15 +191,18 @@ def Main():
     mySocket.connect((host, port))
     print("Socket connected to {0}".format(host))
 
+    '''
     print("Starting new thread to send sensor values")
     startNewThread('Thread-1')
     print("Thread created")
+    '''
 
     # Commands received from the server are translated into actual robot movements
     while True:
         k = mySocket.recv(2048).decode()
 
         print('Received from server: ' + k)
+        '''
         if k == 'w':
             forward()
         if k == 's':
@@ -211,6 +213,7 @@ def Main():
             right()
         if k == 'p':
             stop()
+        '''
         if k == 'q':
             break
 
