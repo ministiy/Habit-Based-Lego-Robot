@@ -164,7 +164,7 @@ def sensorValues(threadName):
         listOfValues = [lsv, rsv, luv, ruv, lmv, rmv]
         #print(listOfValues)
         dataString = pickle.dumps(listOfValues)
-        mySocket.send(dataString)
+        mySocket.sendall(dataString)
 
         time.sleep(0.05 - ((time.time() - starttime) % 0.05))
 
