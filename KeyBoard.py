@@ -164,12 +164,13 @@ def sensorValues(threadName):
 
         #listOfValues = [lsv, rsv, luv, ruv, lmv, rmv]
         listOfValues = [1,2,3,4,5,6]
-        print(listOfValues)
+
 
         package+=listOfValues
         packageSize+=1
 
         if packageSize==10:
+            print(package)
             dataString = pickle.dumps(package)
             mySocket.send(dataString)
             packageSize=0
