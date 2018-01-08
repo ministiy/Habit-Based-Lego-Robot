@@ -117,6 +117,8 @@ def sensorValues(threadName):
     # Get original time as a basis to run the following code every n seconds (where n <= 0.1)
     starttime = time.time()
     buttonValues = {0: "Forward", 1: "Back", 2: "Left", 3: "Right"}
+    packageSize = 0
+    package = []
 
     while True:
         it += 1
@@ -182,12 +184,27 @@ def sensorValues(threadName):
             motor_left.run_timed(speed_sp=-450, time_sp=100)
             motor_right.run_timed(speed_sp=450, time_sp=100)
 
+        '''
         listOfValues = [lsv, rsv, luv, ruv, lmv, rmv]
         dataString = pickle.dumps(listOfValues)
         mySocket.send(dataString)
 
         time.sleep(0.05 - ((time.time() - starttime) % 0.05))
+        '''
+        listOfValues = [lsv, rsv, luv, ruv, lmv, rmv]
+        package = listOfValues + package
+        print(package)
 
+        packageSize += 1
+        print(packageSize)
+        if packageSize == 10:
+            print(package)
+            dataString = pickle.dumps(package)
+            mySocket.send(dataString)
+            packageSize = 0
+            package = []
+
+        time.sleep(0.05 - ((time.time() - starttime) % 0.05))
 
 # ==============================================
 
