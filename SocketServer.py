@@ -18,11 +18,11 @@ class CSVBackgroundThread (threading.Thread):
    def run(self):
         # Printing and writing to CSV file
         while True:
-            data = conn.recv(4096)
+            data = conn.recv(16)
             listOfValues = pickle.loads(data)
-            for i in range(0,9):
-                print('ls:%0.3f rs:%0.3f lu:%0.3f ru:%0.3f lm:%0.3f rm:%0.3f' % (listOfValues[0], listOfValues[1], listOfValues[2], listOfValues[3], listOfValues[4], listOfValues[5]))
-                listOfValues = listOfValues[6:]
+            #for i in range(0,9):
+            print('ls:%0.3f rs:%0.3f lu:%0.3f ru:%0.3f lm:%0.3f rm:%0.3f' % (listOfValues[0], listOfValues[1], listOfValues[2], listOfValues[3], listOfValues[4], listOfValues[5]))
+            listOfValues = listOfValues[6:]
             self.writer.writeData(listOfValues)
 
 # ==== CSV FUNCTIONS ==== #
