@@ -224,7 +224,7 @@ btn.on_backspace = backspace
 
 it = 0
 #host = '192.168.1.66'
-host = '172.24.38.156'
+host = '172.24.9.187'
 port = 5000
 global mySocket
 print("Creating socket")
