@@ -199,7 +199,7 @@ def Main():
     # Commands received from the server are translated into actual robot movements
     while True:
         k = mySocket.recv(2048).decode()
-
+        '''
         print('Received from server: ' + k)
         if k == 'w':
             forward()
@@ -211,6 +211,7 @@ def Main():
             right()
         if k == 'p':
             stop()
+        '''
         if k == 'q':
             break
 
