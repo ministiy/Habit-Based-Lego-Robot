@@ -117,7 +117,8 @@ def sensorValues(threadName):
 
     # Get original time as a basis to run the following code every n seconds (where n <= 0.1)
     starttime = time.time()
-    exitFlag = 0
+    packageSize = 0
+    package = []
 
     while True:
         ## normalized to lie between 0 and 1 (1 close, 0 far)
@@ -164,10 +165,23 @@ def sensorValues(threadName):
         # To change this, change X in
         #   time.sleep(X - ((time.time() - starttime) % X))
 
+        '''
         listOfValues = [lsv, rsv, luv, ruv, lmv, rmv]
         #print(listOfValues)
         dataString = pickle.dumps(listOfValues)
         mySocket.send(dataString)
+
+        time.sleep(0.05 - ((time.time() - starttime) % 0.05))
+        '''
+        listOfValues = [lsv, rsv, luv, ruv, lmv, rmv]
+        package = listOfValues + package
+        packageSize += 1
+
+        if packageSize == 10:
+            dataString = pickle.dumps(package)
+            mySocket.send(dataString)
+            packageSize = 0
+            package = []
 
         time.sleep(0.05 - ((time.time() - starttime) % 0.05))
 
@@ -190,6 +204,10 @@ def Main():
     global mySocket
     print("Creating socket")
     mySocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
+    #https://stackoverflow.com/questions/4465959/python-errno-98-address-already-in-use
+    mySocket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+
     mySocket.connect((host, port))
     print("Socket connected to {0}".format(host))
 
