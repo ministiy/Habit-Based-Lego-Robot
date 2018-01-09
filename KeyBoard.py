@@ -2,12 +2,9 @@
 
 import socket
 from ev3dev.ev3 import *
-from time import sleep, time
 import pickle
 import threading
 from Ev3devSetup import Ev3devSetup
-import time
-
 
 # ============================================
 # A thread class from https://www.tutorialspoint.com/python/python_multithreading.htm
@@ -22,7 +19,6 @@ class SensorBackgroundThread (threading.Thread):
     def run(self):
         while True:
             sensorValues(self.name)
-
 # =============================================
 
 #Setting up with MAX_SENSOR, MAX_MOTOR, BIAS, SENSOR_GAIN, OUTPUT_GAIN
@@ -165,22 +161,16 @@ def sensorValues(threadName):
         # To change this, change X in
         #   time.sleep(X - ((time.time() - starttime) % X))
 
-        '''
-        listOfValues = [lsv, rsv, luv, ruv, lmv, rmv]
-        #print(listOfValues)
-        dataString = pickle.dumps(listOfValues)
-        mySocket.send(dataString)
 
-        time.sleep(0.05 - ((time.time() - starttime) % 0.05))
-        '''
+
         listOfValues = [lsv, rsv, luv, ruv, lmv, rmv]
         package = listOfValues + package
-        packageSize += 1
+        packageSize+=1
 
-        if packageSize == 10:
+        if packageSize==10:
             dataString = pickle.dumps(package)
             mySocket.send(dataString)
-            packageSize = 0
+            packageSize=0
             package = []
 
         time.sleep(0.05 - ((time.time() - starttime) % 0.05))
@@ -197,8 +187,8 @@ def startNewThread(name):
 
 # Code is based on https://stackoverflow.com/questions/41294848/python-sockets-how-to-connect-between-two-computers-on-the-same-wifi
 def Main():
+
     #Host IP is IPv4 address of the computer found by Connection Information on Linux
-    #host = '192.168.1.66'
     host = '172.24.9.187'
     port = 5000
     global mySocket
@@ -215,7 +205,7 @@ def Main():
     while True:
         k = mySocket.recv(2048).decode()
 
-        #print('Received from server: ' + k, flush=True)
+        print('Received from server: ' + k)
 
         if k == 'w':
             forward()
@@ -233,7 +223,6 @@ def Main():
 
     # Close the socket after the program has quit from the server side
     mySocket.close()
-
 
 if __name__ == '__main__':
     Main()

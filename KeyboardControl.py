@@ -39,7 +39,7 @@ motor_left = ev3devrobot.initLargeMotor('outB')
 motor_left.reset()
 
 motor_right = ev3devrobot.initLargeMotor('outC')
-motor_right.start()
+motor_right.reset()
 
 left_colour_sensor = ev3devrobot.initColorSensor('in2')
 left_colour_sensor.mode = 'COL-AMBIENT'
@@ -228,8 +228,8 @@ def openCSVFile():
 
 def recordSensorValue():
     print("Opening output.csv")
-    WriteCSV.writeHeader()
     writer = openCSVFile()
+    writer.writeHeader()
     print('Starting thread')
     startNewThread('Thread-1', writer)
     # Control the robot using the main thread

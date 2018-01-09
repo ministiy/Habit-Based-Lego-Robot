@@ -20,8 +20,11 @@ class CSVBackgroundThread (threading.Thread):
         while True:
             data = conn.recv(4096)
             listOfValues = pickle.loads(data)
-            print('ls:%0.3f rs:%0.3f lu:%0.3f ru:%0.3f lm:%0.3f rm:%0.3f' % (listOfValues[0], listOfValues[1], listOfValues[2], listOfValues[3], listOfValues[4], listOfValues[5]))
-            self.writer.writeData(listOfValues)
+            for i in range(0,10):
+                print('ls:%0.3f rs:%0.3f lu:%0.3f ru:%0.3f lm:%0.3f rm:%0.3f' % (listOfValues[0], listOfValues[1], listOfValues[2], listOfValues[3], listOfValues[4], listOfValues[5]))
+                self.writer.writeData(listOfValues[:6])
+                listOfValues = listOfValues[6:]
+
 
 # ==== CSV FUNCTIONS ==== #
 # ==============================================
@@ -64,6 +67,10 @@ def Main():
 
     print("Creating Socket")
     mySocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
+    #https://stackoverflow.com/questions/4465959/python-errno-98-address-already-in-use
+    mySocket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+
     mySocket.bind((host, port))
     print("Socket started listening")
 
@@ -97,6 +104,7 @@ def Main():
 
         print("sending: " + str(k))
         conn.send(k.encode())
+        print("Sent")
 
         if k == 'q':
             break;
