@@ -317,13 +317,27 @@ def Main():
     #startNewThread('Thread-1')
     #print("Thread created")
 
-    movementType = int(input("1.Keyboard 2.Braitenburg"))
-    
+    movementType = int(input("1.Keyboard 2.Braitenburg"))    
+    k = mySocket.recv(2048).decode()
+
     if movementType == 1:
         keyboardThread = threading.Thread(target=sensorValues)
         keyboardThread.daemon = True
         keyboardThread.start()
         print("1 is chosen")
+        while True:
+            #print('Received from server: ' + k, flush=True)
+            if k == 'w':
+                forward()
+            if k == 's':
+                back()
+            if k == 'a':
+                left()
+            if k == 'd':
+                right()
+            if k == 'p':
+                stop()
+
         
     elif movementType == 2:
         braitenburgThread = threading.Thread(target=braitenburgMovement)
@@ -332,25 +346,8 @@ def Main():
         print("2 is chosen")
 
      # Commands received from the server are translated into actual robot movements
-    while True:
-        k = mySocket.recv(2048).decode()
-
-        #print('Received from server: ' + k, flush=True)
-
-        if k == 'w':
-            forward()
-        if k == 's':
-            back()
-        if k == 'a':
-            left()
-        if k == 'd':
-            right()
-        if k == 'p':
-            stop()
-
-        if k == 'q':
-            break
-
+    if k == 'q':
+        break
     # Close the socket after the program has quit from the server side
     cleanup()
 
