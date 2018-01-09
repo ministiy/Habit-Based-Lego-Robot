@@ -16,7 +16,7 @@ class WriteCSV:
             self.file = open(self.filename, 'w')
             #file.close()
 
-        self.file = open(self.filename, 'a', newline="")
+        self.file = open(self.filename, 'a')
         #self.file = file
 
     def closeFile(self):
@@ -37,5 +37,5 @@ class WriteCSV:
             #   ruv = right ultraviolet sensor value
             #   lmv = left motor value
             #   rmv = right motor value
-        wr = csv.writer(self.file, delimiter = ',' , quoting=csv.QUOTE_ALL)
+        wr = csv.writer(self.file, delimiter = ',' , quoting=csv.QUOTE_ALL, lineterminator='\n')
         wr.writerow(sensor_motor_values)
