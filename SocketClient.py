@@ -204,10 +204,6 @@ def Main():
     global mySocket
     print("Creating socket")
     mySocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-
-    #https://stackoverflow.com/questions/4465959/python-errno-98-address-already-in-use
-    mySocket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-
     mySocket.connect((host, port))
     print("Socket connected to {0}".format(host))
 
