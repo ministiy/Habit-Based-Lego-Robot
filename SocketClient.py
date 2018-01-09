@@ -6,6 +6,7 @@ from time import sleep, time
 import pickle
 import threading
 from Ev3devSetup import Ev3devSetup
+import Constant
 import time
 
 
@@ -199,7 +200,7 @@ def startNewThread(name):
 def Main():
     #Host IP is IPv4 address of the computer found by Connection Information on Linux
     #host = '192.168.1.66'
-    host = '172.24.9.187'
+    host = Constant.IP_ADDRESS
     port = 5000
     global mySocket
     print("Creating socket")
