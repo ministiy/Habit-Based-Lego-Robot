@@ -144,48 +144,9 @@ def sensorValues():
         Leds.set(Leds.LEFT, brightness_pct=lsv)
         Leds.set(Leds.RIGHT, brightness_pct=rsv)
 
-        # if max(lsv,rsv) < 0.1 :
-        #     SENSOR_GAIN *=1.05
-        #     print('SENSOR_GAIN increased to : %f' %(SENSOR_GAIN))
-        # elif min(lsv,rsv) > 0.5 :
-        #     SENSOR_GAIN *=0.95
-        #     print('SENSOR_GAIN decreased to : %f' %(SENSOR_GAIN))
-
-        # ## LOVE + AGGR
-        # lmv = BIAS + (rsv-0.2*lsv)
-        # rmv = BIAS + (lsv-0.2*rsv)
-
         lmv = motor_left.speed
         rmv = motor_right.speed
 
-
-        # writing to a csv file called output.csv to store sensory-motor data where
-        #   lsv = left colour sensor value
-        #   rsv = right colour sensor value
-        #   luv = left ultraviolet sensor value
-        #   ruv = right ultraviolet sensor value
-        #   lmv = left motor value
-        #   rmv = right motor value
-        #sensor_motor_values = [lsv, rsv, luv, ruv, lmv, rmv]
-        #writer.writeData(sensor_motor_values)
-
-        #with open('output.csv', 'a', newline="") as output_file:
-            #wr = csv.writer(output_file, delimiter=',', quoting=csv.QUOTE_ALL)
-            #wr.writerow([lsv, rsv, luv, ruv, lmv, rmv])
-        #print('ls:%0.3f rs:%0.3f lu:%0.3f ru:%0.3f lm:%0.3f rm:%0.3f' % (lsv, rsv, luv, ruv, lmv, rmv))
-
-        # Time period to wait until new sensor values are taken. Currently values are taken every 0.05 seconds.
-        # To change this, change X in
-        #   time.sleep(X - ((time.time() - starttime) % X))
-
-        '''
-        listOfValues = [lsv, rsv, luv, ruv, lmv, rmv]
-        #print(listOfValues)
-        dataString = pickle.dumps(listOfValues)
-        mySocket.send(dataString)
-
-        time.sleep(0.05 - ((time.time() - starttime) % 0.05))
-        '''
         listOfValues = [lsv, rsv, luv, ruv, lmv, rmv]
         package = listOfValues + package
         packageSize += 1
@@ -217,20 +178,6 @@ def braitenburgMovement():
         Leds.set(Leds.LEFT, brightness_pct=lsv)
         Leds.set(Leds.RIGHT, brightness_pct=rsv)
 
-        # if max(lsv,rsv) < 0.1 :
-        #     SENSOR_GAIN *=1.05
-        #     print('SENSOR_GAIN increased to : %f' %(SENSOR_GAIN))
-        # elif min(lsv,rsv) > 0.5 :
-        #     SENSOR_GAIN *=0.95
-        #     print('SENSOR_GAIN decreased to : %f' %(SENSOR_GAIN))
-
-        # ## LOVE + AGGR
-        # lmv = BIAS + (rsv-0.2*lsv)
-        # rmv = BIAS + (lsv-0.2*rsv)
-
-        'lmv = motor_left.speed'
-        'rmv = motor_right.speed'
-
         ## AGGR
         lmv = ev3devrobot.BIAS + rsv - 0.0 * lsv - (ruv * 2.)
         rmv = ev3devrobot.BIAS + lsv - 0.0 * rsv - (luv * 2.)
@@ -241,12 +188,6 @@ def braitenburgMovement():
         if max(lmv, rmv) > ev3devrobot.MAX_MOTOR:
             lmv -= max_mv - ev3devrobot.MAX_MOTOR
             rmv -= max_mv - ev3devrobot.MAX_MOTOR
-            # OUTPUT_GAIN *= 0.95
-            # print('OUTPUT_GAIN decreased to : %f' %(OUTPUT_GAIN))
-
-        # if min(lmv,rmv) < 0.05 :
-        #     OUTPUT_GAIN *= 1.05
-        #     print('OUTPUT_GAIN increased to : %f' %(OUTPUT_GAIN))
 
 
         if (it % 10) == 0:
@@ -257,31 +198,7 @@ def braitenburgMovement():
 
         motor_left.run_forever(speed_sp=lmv)
         motor_right.run_forever(speed_sp=rmv)
-        # writing to a csv file called output.csv to store sensory-motor data where
-        #   lsv = left colour sensor value
-        #   rsv = right colour sensor value
-        #   luv = left ultraviolet sensor value
-        #   ruv = right ultraviolet sensor value
-        #   lmv = left motor value
-        #   rmv = right motor value
-        #sensor_motor_values = [lsv, rsv, luv, ruv, lmv, rmv]
-        #writer.writeData(sensor_motor_values)
 
-        #with open('output.csv', 'a', newline="") as output_file:
-            #wr = csv.writer(output_file, delimiter=',', quoting=csv.QUOTE_ALL)
-            #wr.writerow([lsv, rsv, luv, ruv, lmv, rmv])
-        #print('ls:%0.3f rs:%0.3f lu:%0.3f ru:%0.3f lm:%0.3f rm:%0.3f' % (lsv, rsv, luv, ruv, lmv, rmv))
-
-        # Time period to wait until new sensor values are taken. Currently values are taken every 0.05 seconds.
-        # To change this, change X in
-        #   time.sleep(X - ((time.time() - starttime) % X))
-        '''
-        listOfValues = [lsv, rsv, luv, ruv, lmv, rmv]
-        dataString = pickle.dumps(listOfValues)
-        mySocket.send(dataString)
-
-        time.sleep(0.05 - ((time.time() - starttime) % 0.05))
-        '''
         listOfValues = [lsv, rsv, luv, ruv, lmv, rmv]
         package = listOfValues + package
 
@@ -313,20 +230,6 @@ def randomMovement():
         Leds.set(Leds.LEFT, brightness_pct=lsv)
         Leds.set(Leds.RIGHT, brightness_pct=rsv)
 
-        # if max(lsv,rsv) < 0.1 :
-        #     SENSOR_GAIN *=1.05
-        #     print('SENSOR_GAIN increased to : %f' %(SENSOR_GAIN))
-        # elif min(lsv,rsv) > 0.5 :
-        #     SENSOR_GAIN *=0.95
-        #     print('SENSOR_GAIN decreased to : %f' %(SENSOR_GAIN))
-
-        # ## LOVE + AGGR
-        # lmv = BIAS + (rsv-0.2*lsv)
-        # rmv = BIAS + (lsv-0.2*rsv)
-
-        'lmv = motor_left.speed'
-        'rmv = motor_right.speed'
-
         ## AGGR
         lmv = ev3devrobot.BIAS + rsv - 0.0 * lsv - (ruv * 2.)
         rmv = ev3devrobot.BIAS + lsv - 0.0 * rsv - (luv * 2.)
@@ -337,13 +240,6 @@ def randomMovement():
         if max(lmv, rmv) > ev3devrobot.MAX_MOTOR:
             lmv -= max_mv - ev3devrobot.MAX_MOTOR
             rmv -= max_mv - ev3devrobot.MAX_MOTOR
-            # OUTPUT_GAIN *= 0.95
-            # print('OUTPUT_GAIN decreased to : %f' %(OUTPUT_GAIN))
-
-        # if min(lmv,rmv) < 0.05 :
-        #     OUTPUT_GAIN *= 1.05
-        #     print('OUTPUT_GAIN increased to : %f' %(OUTPUT_GAIN))
-
 
         if (it % 10) == 0:
             print('ls: %0.3f rs:%0.3f lm: %0.3f rm:%0.3f' % (lsv, rsv, lmv, rmv))
@@ -366,13 +262,6 @@ def randomMovement():
             motor_left.run_timed(speed_sp=-450, time_sp=100)
             motor_right.run_timed(speed_sp=450, time_sp=100)
 
-        '''
-        listOfValues = [lsv, rsv, luv, ruv, lmv, rmv]
-        dataString = pickle.dumps(listOfValues)
-        mySocket.send(dataString)
-
-        time.sleep(0.05 - ((time.time() - starttime) % 0.05))
-        '''
         listOfValues = [lsv, rsv, luv, ruv, lmv, rmv]
         package = listOfValues + package
 
@@ -406,10 +295,6 @@ def Main():
     mySocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     mySocket.connect((host, port))
     print("Socket connected to {0}".format(host))
-
-    #print("Starting new thread to send sensor values")
-    #startNewThread('Thread-1')
-    #print("Thread created")
 
     movementType = int(mySocket.recv(1).decode()) 
 
@@ -457,7 +342,6 @@ def Main():
     # Commands received from the server are translated into actual robot movements
     cleanup()
     # Close the socket after the program has quit from the server side
-    #cleanup()
 
 if __name__ == '__main__':
     Main()
