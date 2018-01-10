@@ -189,7 +189,7 @@ def sensorValues():
         package = listOfValues + package
         packageSize += 1
 
-        if packageSize == 5:
+        if packageSize == Constant.PACKAGE_SIZE:
             dataString = pickle.dumps(listOfValues)
             mySocket.send(dataString)
             packageSize = 0
@@ -285,7 +285,7 @@ def braitenburgMovement():
         package = listOfValues + package
 
         packageSize += 1
-        if packageSize == 5:
+        if packageSize == Constant.PACKAGE_SIZE:
             dataString = pickle.dumps(listOfValues)
             mySocket.send(dataString)
             packageSize = 0
