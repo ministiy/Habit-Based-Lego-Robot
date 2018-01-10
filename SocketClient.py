@@ -59,34 +59,6 @@ left_ultrasonic_sensor.mode = 'US-DIST-CM'
 right_ultrasonic_sensor = ev3devrobot.initUltraSonicSensor('in4')
 right_ultrasonic_sensor.mode = 'US-DIST-CM'
 
-"""
-# Setting up constants and variables before actually starting up the program
-MAX_SENSOR = 100.0 # percent
-MAX_MOTOR = 1000.0
-
-BIAS = 0.05
-SENSOR_GAIN = 1.0
-OUTPUT_GAIN = 1.0
-
-# attach large motors to ports B and C
-motor_left = LargeMotor('outB')
-motor_right = LargeMotor('outC')
-
-motor_left.reset()
-motor_right.reset()
-
-ls = ColorSensor('in2')
-#assert ls.connected, "Left sensor not connected to port 2"
-rs = ColorSensor('in3')
-#assert rs.connected, "Right sensor not connected to port 3"
-ls.mode='COL-AMBIENT'
-rs.mode='COL-AMBIENT'
-
-lu = UltrasonicSensor('in1')
-lu.mode='US-DIST-CM'
-ru = UltrasonicSensor('in4')
-ru.mode='US-DIST-CM'
-"""
 # ==== ROBOT MOVEMENT FUNCTIONS === #
 # ==============================================
 
@@ -123,10 +95,15 @@ def stopMotor():
 
 # ==============================================
 
+def sendPackages(package):
+    dataString = pickle.dumps(package)
+    mySocket.send(dataString)
+    
+
 # ==== DATA COLLECTION FUNCTIONS ==== #
 # ==============================================
 
-def sensorValues():
+def keyboardControl():
 
     # Get original time as a basis to run the following code every n seconds (where n <= 0.1)
     starttime = time.time()
@@ -147,13 +124,11 @@ def sensorValues():
         lmv = motor_left.speed
         rmv = motor_right.speed
 
-        listOfValues = [lsv, rsv, luv, ruv, lmv, rmv]
-        package = listOfValues + package
-        packageSize += 1
+        package.extend([lsv, rsv, luv, ruv, lmv, rmv])
 
+        packageSize += 1
         if packageSize == Constant.PACKAGE_SIZE:
-            dataString = pickle.dumps(package)
-            mySocket.send(dataString)
+            sendPackages(package)
             packageSize = 0
             package = []
 
@@ -199,14 +174,11 @@ def braitenburgMovement():
         motor_left.run_forever(speed_sp=lmv)
         motor_right.run_forever(speed_sp=rmv)
 
-        listOfValues = [lsv, rsv, luv, ruv, lmv, rmv]
 
-        package = listOfValues + package
-
+        package.extend([lsv, rsv, luv, ruv, lmv, rmv])
         packageSize += 1
         if packageSize == Constant.PACKAGE_SIZE:
-            dataString = pickle.dumps(package)
-            mySocket.send(dataString)
+            sendPackages(package)
             packageSize = 0
             package = []
 
@@ -250,27 +222,26 @@ def randomMovement():
 
         # get random number to determine if the robot is going to move forward, back, right or left
         num = random.randrange(4)
+        positivespeed = random.randrange(500)
+        negativespeed = -random.randrange(500)
+
         if num == 0:
-            motor_left.run_timed(speed_sp=450, time_sp=100)
-            motor_right.run_timed(speed_sp=450, time_sp=100)
+            motor_left.run_timed(speed_sp=positivespeed, time_sp=10000)
+            motor_right.run_timed(speed_sp=positivespeed, time_sp=10000)
         elif num == 1:
-            motor_left.run_timed(speed_sp=-450, time_sp=100)
-            motor_right.run_timed(speed_sp=-450, time_sp=100)
+            motor_left.run_timed(speed_sp=negativespeed, time_sp=10000)
+            motor_right.run_timed(speed_sp=negativespeed, time_sp=10000)
         elif num == 2:
-            motor_left.run_timed(speed_sp=450, time_sp=100)
-            motor_right.run_timed(speed_sp=-450, time_sp=100)
+            motor_left.run_timed(speed_sp=positivespeed, time_sp=10000)
+            motor_right.run_timed(speed_sp=negativespeed, time_sp=10000)
         elif num == 3:
-            motor_left.run_timed(speed_sp=-450, time_sp=100)
-            motor_right.run_timed(speed_sp=450, time_sp=100)
+            motor_left.run_timed(speed_sp=negativespeed, time_sp=10000)
+            motor_right.run_timed(speed_sp=positivespeed, time_sp=10000)
 
-        listOfValues = [lsv, rsv, luv, ruv, lmv, rmv]
-        package = listOfValues + package
-
+        package.extend([lsv, rsv, luv, ruv, lmv, rmv])
         packageSize += 1
-
         if packageSize == Constant.PACKAGE_SIZE:
-            dataString = pickle.dumps(package)
-            mySocket.send(dataString)
+            sendPackages(package)
             packageSize = 0
             package = []
 
@@ -300,7 +271,7 @@ def Main():
 
     movementType = int(mySocket.recv(1).decode())
     if movementType == 1:
-        keyboardThread = threading.Thread(target=sensorValues)
+        keyboardThread = threading.Thread(target=keyboardControl)
         keyboardThread.daemon = True
         keyboardThread.start()
         print("1 is chosen")
