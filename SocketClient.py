@@ -15,6 +15,7 @@ import subprocess
 # A thread class from https://www.tutorialspoint.com/python/python_multithreading.htm
 # This thread class represents a background thread on the robot to collect sensor-motor data and send it back
 # to the server.
+
 class SensorBackgroundThread (threading.Thread):
     def __init__(self, threadID, name, counter):
         threading.Thread.__init__(self)
@@ -188,8 +189,8 @@ def sensorValues():
         package = listOfValues + package
         packageSize += 1
 
-        if packageSize == 10:
-            dataString = pickle.dumps(package)
+        if packageSize == 5:
+            dataString = pickle.dumps(listOfValues)
             mySocket.send(dataString)
             packageSize = 0
             package = []
@@ -284,8 +285,8 @@ def braitenburgMovement():
         package = listOfValues + package
 
         packageSize += 1
-        if packageSize == 10:
-            dataString = pickle.dumps(package)
+        if packageSize == 5:
+            dataString = pickle.dumps(listOfValues)
             mySocket.send(dataString)
             packageSize = 0
             package = []
@@ -317,7 +318,7 @@ def Main():
     #startNewThread('Thread-1')
     #print("Thread created")
 
-    movementType = int(input("1.Keyboard 2.Braitenburg"))    
+    movementType = int(mySocket.recv(1).decode()) 
 
     if movementType == 1:
         keyboardThread = threading.Thread(target=sensorValues)
