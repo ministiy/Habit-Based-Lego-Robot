@@ -2,12 +2,13 @@
 
 import socket
 from ev3dev.ev3 import *
-from time import sleep, time
+from time import sleep
 import pickle
 import threading
 from Ev3devSetup import Ev3devSetup
 import Constant
 import time
+import random
 import subprocess
 
 
@@ -293,6 +294,98 @@ def braitenburgMovement():
 
         time.sleep(0.05 - ((time.time() - starttime) % 0.05))
 
+def randomMovement():
+    it = 0
+    # Get original time as a basis to run the following code every n seconds (where n <= 0.1)
+    starttime = time.time()
+    buttonValues = {0: "Forward", 1: "Back", 2: "Left", 3: "Right"}
+    packageSize = 0
+    package = []
+
+    while True:
+        it += 1
+        lsv = ev3devrobot.SENSOR_GAIN * float(left_colour_sensor.value()) / ev3devrobot.MAX_SENSOR
+        rsv = ev3devrobot.SENSOR_GAIN * float(right_colour_sensor.value()) / ev3devrobot.MAX_SENSOR
+
+        luv = 1.0 - max(0.0, min(1.0, float(left_ultrasonic_sensor.value()) / 200.0))
+        ruv = 1.0 - max(0.0, min(1.0, float(right_ultrasonic_sensor.value()) / 200.0))
+
+        Leds.set(Leds.LEFT, brightness_pct=lsv)
+        Leds.set(Leds.RIGHT, brightness_pct=rsv)
+
+        # if max(lsv,rsv) < 0.1 :
+        #     SENSOR_GAIN *=1.05
+        #     print('SENSOR_GAIN increased to : %f' %(SENSOR_GAIN))
+        # elif min(lsv,rsv) > 0.5 :
+        #     SENSOR_GAIN *=0.95
+        #     print('SENSOR_GAIN decreased to : %f' %(SENSOR_GAIN))
+
+        # ## LOVE + AGGR
+        # lmv = BIAS + (rsv-0.2*lsv)
+        # rmv = BIAS + (lsv-0.2*rsv)
+
+        'lmv = motor_left.speed'
+        'rmv = motor_right.speed'
+
+        ## AGGR
+        lmv = ev3devrobot.BIAS + rsv - 0.0 * lsv - (ruv * 2.)
+        rmv = ev3devrobot.BIAS + lsv - 0.0 * rsv - (luv * 2.)
+
+        lmv *= ev3devrobot.OUTPUT_GAIN
+        rmv *= ev3devrobot.OUTPUT_GAIN
+
+        if max(lmv, rmv) > ev3devrobot.MAX_MOTOR:
+            lmv -= max_mv - ev3devrobot.MAX_MOTOR
+            rmv -= max_mv - ev3devrobot.MAX_MOTOR
+            # OUTPUT_GAIN *= 0.95
+            # print('OUTPUT_GAIN decreased to : %f' %(OUTPUT_GAIN))
+
+        # if min(lmv,rmv) < 0.05 :
+        #     OUTPUT_GAIN *= 1.05
+        #     print('OUTPUT_GAIN increased to : %f' %(OUTPUT_GAIN))
+
+
+        if (it % 10) == 0:
+            print('ls: %0.3f rs:%0.3f lm: %0.3f rm:%0.3f' % (lsv, rsv, lmv, rmv))
+
+        lmv = int(max(-1000, min(1000, ev3devrobot.MAX_MOTOR * lmv)))
+        rmv = int(max(-1000, min(1000, ev3devrobot.MAX_MOTOR * rmv)))
+
+        # get random number to determine if the robot is going to move forward, back, right or left
+        num = random.randrange(4)
+        if num == 0:
+            motor_left.run_timed(speed_sp=450, time_sp=100)
+            motor_right.run_timed(speed_sp=450, time_sp=100)
+        elif num == 1:
+            motor_left.run_timed(speed_sp=-450, time_sp=100)
+            motor_right.run_timed(speed_sp=-450, time_sp=100)
+        elif num == 2:
+            motor_left.run_timed(speed_sp=450, time_sp=100)
+            motor_right.run_timed(speed_sp=-450, time_sp=100)
+        elif num == 3:
+            motor_left.run_timed(speed_sp=-450, time_sp=100)
+            motor_right.run_timed(speed_sp=450, time_sp=100)
+
+        '''
+        listOfValues = [lsv, rsv, luv, ruv, lmv, rmv]
+        dataString = pickle.dumps(listOfValues)
+        mySocket.send(dataString)
+
+        time.sleep(0.05 - ((time.time() - starttime) % 0.05))
+        '''
+        listOfValues = [lsv, rsv, luv, ruv, lmv, rmv]
+        package = listOfValues + package
+
+        packageSize += 1
+
+        if packageSize == Constant.PACKAGE_SIZE:
+            dataString = pickle.dumps(package)
+            mySocket.send(dataString)
+            packageSize = 0
+            package = []
+
+        time.sleep(0.05 - ((time.time() - starttime) % 0.05))
+
 # ==============================================
 
 def startNewThread(name):
@@ -340,13 +433,22 @@ def Main():
                 stop()
             elif k == 'q':
                 break
-
-        
+    
     elif movementType == 2:
         braitenburgThread = threading.Thread(target=braitenburgMovement)
         braitenburgThread.daemon = True
         braitenburgThread.start()
         print("2 is chosen")
+        while True:
+            k = mySocket.recv(2048).decode()
+            if k == 'q':
+                break
+
+    elif movementType == 3:
+        randomThread = threading.Thread(target=randomMovement)
+        randomThread.daemon = True
+        randomThread.start()
+        print("3 is chosen")
         while True:
             k = mySocket.recv(2048).decode()
             if k == 'q':
