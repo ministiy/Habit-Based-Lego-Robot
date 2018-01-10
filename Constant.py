@@ -1,1 +1,6 @@
+<<<<<<< HEAD
 IP_ADDRESS = '172.24.19.167'
+=======
+IP_ADDRESS = '172.23.36.216'
+PACKAGE_SIZE = 5
+>>>>>>> e72106c44496edaae5c7014085ddcda76997ad40
