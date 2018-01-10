@@ -5,6 +5,7 @@ import termios, tty, sys
 import threading
 import pickle
 from writeCSV import WriteCSV
+import Constant
 
 # A thread class from https://www.tutorialspoint.com/python/python_multithreading.htm
 # This class represents a background thread used by the server to store collected data into a .csv file
@@ -20,10 +21,11 @@ class CSVBackgroundThread (threading.Thread):
         while True:
             data = conn.recv(4096)
             listOfValues = pickle.loads(data)
-            #for i in range(0,1):
-            print('ls:%0.3f rs:%0.3f lu:%0.3f ru:%0.3f lm:%0.3f rm:%0.3f' % (listOfValues[0], listOfValues[1], listOfValues[2], listOfValues[3], listOfValues[4], listOfValues[5]))
-            self.writer.writeData(listOfValues)
-                #listOfValues = listOfValues[6:]
+            for i in range(Constant.PACKAGE_SIZE):
+                print('ls:%0.3f rs:%0.3f lu:%0.3f ru:%0.3f lm:%0.3f rm:%0.3f' % (listOfValues[0], listOfValues[1], listOfValues[2], listOfValues[3], listOfValues[4], listOfValues[5]))
+                self.writer.writeData(listOfValues[:6])
+                listOfValues = listOfValues[6:]
+                print(listOfValues)
 
 
 # ==== CSV FUNCTIONS ==== #
