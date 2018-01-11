@@ -28,6 +28,7 @@ class WriteCSV:
         #with open('output.csv', 'w', newline="") as output_file:
         wr = csv.writer(self.file, delimiter=',', quoting=csv.QUOTE_ALL)
         wr.writerow(header)
+        self.file.flush()
 
     def writeData(self, sensor_motor_values):
         # writing to a csv file called output.csv to store sensory-motor data where
@@ -39,3 +40,4 @@ class WriteCSV:
             #   rmv = right motor value
         wr = csv.writer(self.file, delimiter = ',' , quoting=csv.QUOTE_ALL)
         wr.writerow(sensor_motor_values)
+        self.file.flush()

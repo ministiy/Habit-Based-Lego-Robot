@@ -27,7 +27,6 @@ class CSVBackgroundThread (threading.Thread):
                 listOfValues = listOfValues[6:]
                 #   print(listOfValues)
 
-
 # ==== CSV FUNCTIONS ==== #
 # ==============================================
 
