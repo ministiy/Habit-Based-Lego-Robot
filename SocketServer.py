@@ -6,6 +6,9 @@ import threading
 import pickle
 from writeCSV import WriteCSV
 import Constant
+import pandas as pd
+import matplotlib.pyplot as plt
+import threading
 
 # A thread class from https://www.tutorialspoint.com/python/python_multithreading.htm
 # This class represents a background thread used by the server to store collected data into a .csv file
@@ -26,8 +29,20 @@ class CSVBackgroundThread (threading.Thread):
                 self.writer.writeData(listOfValues[:6])
                 listOfValues = listOfValues[6:]
                 #   print(listOfValues)
-
-
+    
+class newStartThread(threading.Thread):
+    def __init__(self, name):
+        threading.Thread.__init__(self)
+        self.name = name
+        self.datatobeplotted = []
+    def run(self):
+        while True:
+            data = conn.recv(4096)
+            listOfValues = pickle.loads(data)
+            self.datatobeplotted.extend(listOfValues)
+            df = pd.DataFrame(self.datatobeplotted)
+            df.plot(kind='line')
+            plt.show(block=True)
 # ==== CSV FUNCTIONS ==== #
 # ==============================================
 
@@ -36,6 +51,12 @@ def startNewThread(name, writer):
     thread1 = CSVBackgroundThread(1, "Thread-1", 1, writer)
     thread1.daemon = True
     thread1.start()
+
+def startThread(name):
+    thread2 = newStartThread(name)
+    thread2.daemon = True
+    thread2.start()
+
 
 # ==============================================
 
@@ -89,6 +110,10 @@ def Main():
     # Starting the background thread in order to collect data from the robot
     print('Starting thread to write sensor values to csv files')
     startNewThread('Thread-1', writer)
+    print("Thread created")
+
+    print("Starting thread to plot")
+    startThread('Thread-2')
     print("Thread created")
 
     # Robot controls on main thread

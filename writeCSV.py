@@ -2,12 +2,21 @@
 
 import csv
 from pathlib import Path
+import pandas as pd
+import matplotlib.pyplot as plt
+import threading
 
 class WriteCSV:
 
     def __init__(self,filename):
         self.filename = filename
         self.file = None
+
+    def testopenwithwrite(self):
+        self.file = open(self.filename, 'w')
+
+    def testopen2withappend(self):
+        self.file = open(self.filename, 'a', newline="")
 
     def openFile(self):
         fileCheck = Path(self.filename)
@@ -28,6 +37,7 @@ class WriteCSV:
         #with open('output.csv', 'w', newline="") as output_file:
         wr = csv.writer(self.file, delimiter=',', quoting=csv.QUOTE_ALL)
         wr.writerow(header)
+        self.file.flush()
 
     def writeData(self, sensor_motor_values):
         # writing to a csv file called output.csv to store sensory-motor data where
@@ -39,3 +49,11 @@ class WriteCSV:
             #   rmv = right motor value
         wr = csv.writer(self.file, delimiter = ',' , quoting=csv.QUOTE_ALL)
         wr.writerow(sensor_motor_values)
+        self.file.flush()
+
+    def plotit(self):
+        threading.Timer(5.0, self.plotit).start()
+        data = pd.read_csv("./output.csv")
+        #print(data)
+        data['left motor'].plot(kind='line')
+        plt.show()
