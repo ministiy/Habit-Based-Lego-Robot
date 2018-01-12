@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 import csv
-from pathlib import Path
+from pathlib2 import Path
 
 class WriteCSV:
 

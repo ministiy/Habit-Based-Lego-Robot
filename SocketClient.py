@@ -174,6 +174,7 @@ def braitenburgMovement():
         motor_left.run_forever(speed_sp=lmv)
         motor_right.run_forever(speed_sp=rmv)
 
+
         package.extend([lsv, rsv, luv, ruv, lmv, rmv])
         packageSize += 1
         if packageSize == Constant.PACKAGE_SIZE:
@@ -267,8 +268,8 @@ def Main():
     mySocket.connect((host, port))
     print("Socket connected to {0}".format(host))
 
-    movementType = int(mySocket.recv(1).decode()) 
 
+    movementType = int(mySocket.recv(1).decode())
     if movementType == 1:
         keyboardThread = threading.Thread(target=keyboardControl)
         keyboardThread.daemon = True
@@ -313,6 +314,7 @@ def Main():
     # Commands received from the server are translated into actual robot movements
     cleanup()
     # Close the socket after the program has quit from the server side
+
 
 if __name__ == '__main__':
     Main()
