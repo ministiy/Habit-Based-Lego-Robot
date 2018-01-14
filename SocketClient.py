@@ -174,7 +174,6 @@ def braitenburgMovement():
         motor_left.run_forever(speed_sp=lmv)
         motor_right.run_forever(speed_sp=rmv)
 
-
         package.extend([lsv, rsv, luv, ruv, lmv, rmv])
         packageSize += 1
         if packageSize == Constant.PACKAGE_SIZE:
