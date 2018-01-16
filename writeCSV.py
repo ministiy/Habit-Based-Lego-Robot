@@ -23,7 +23,7 @@ class WriteCSV:
         self.file.close()
         
     def writeHeader(self):
-        header = ['left sensor', 'right sensor', 'left ultraviolet sensor', 'right ultraviolet sensor', 'left motor',
+        header = ['left sensor', 'right sensor', 'left ultrasound sensor', 'right ultrasound sensor', 'left motor',
                   'right motor']
         #with open('output.csv', 'w', newline="") as output_file:
         wr = csv.writer(self.file, delimiter=',', quoting=csv.QUOTE_ALL)
