@@ -123,7 +123,6 @@ def keyboardControl():
 
         lmv = motor_left.speed
         rmv = motor_right.speed
-
         package.extend([lsv, rsv, luv, ruv, lmv, rmv])
 
         packageSize += 1
