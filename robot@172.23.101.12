@@ -121,8 +121,6 @@ def keyboardControl():
         Leds.set(Leds.LEFT, brightness_pct=lsv)
         Leds.set(Leds.RIGHT, brightness_pct=rsv)
 
-        lmv = motor_left.speed
-        rmv = motor_right.speed
         package.extend([lsv, rsv, luv, ruv, lmv, rmv])
 
         packageSize += 1
@@ -172,7 +170,6 @@ def braitenburgMovement():
 
         motor_left.run_forever(speed_sp=lmv)
         motor_right.run_forever(speed_sp=rmv)
-
 
         package.extend([lsv, rsv, luv, ruv, lmv, rmv])
         packageSize += 1
