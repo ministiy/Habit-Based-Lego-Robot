@@ -16,7 +16,7 @@ Note: It is **much better** to use dualboot since there are no added complexity,
 7. Execute **agent on**.
 
 The following shows an example of what you would see up to this point.
-
+<div>
 robot@ev3dev:~$ connmanctl
 Error getting VPN connections: The name net.connman.vpn was not provided by any
 connmanctl> enable wifi
@@ -32,10 +32,10 @@ connmanctl> services
     schuur               wifi_e8de27077de3_736368757572_managed_psk
 connmanctl> agent on
 Agent registered
+</div>
 
-
-7. Note the different types of connections and security protocols. Find the network which you want to connect to.
-8. If your network's security is "managed_psk", then you can connect to the network by following the commands below:
+8. Note the different types of connections and security protocols. Find the network which you want to connect to.
+9. If your network's security is "managed_psk", then you can connect to the network by following the commands below:
 
 connmanctl> connect wifi_e8de27077de3_41      # You can use the TAB key at this point to autocomplete the name
 connmanctl> connect wifi_e8de27077de3_41483034303434393134_managed_psk
@@ -47,7 +47,7 @@ connmanctl> quit
 
 After you have done this, skip to step ___
 
-8b. However, if your network's security is "managed_ieee8021x" (as shown below for UoA-WiFi"), you would be unable to connect to the network using the above method. Instead, you would need a custom .config file on the robot.
+9b. However, if your network's security is "managed_ieee8021x" (as shown below for UoA-WiFi"), you would be unable to connect to the network using the above method. Instead, you would need a custom .config file on the robot.
 
 connmanctl> services
 *AO UoA-WiFi             wifi_74da38c7a306_556f412d57694669_managed_ieee8021x
@@ -56,13 +56,12 @@ connmanctl> services
     eduroam              wifi_74da38c7a306_656475726f616d_managed_ieee8021x
     sc-amar213-291105    wifi_74da38c7a306_73632d616d61723231332d323931313035_managed_psk
     
-9. Quit the ConnMan interface with the **quit** command, then execute _**cd /var/lib/connman**_ to navigate to the ConnMan folder.
-10. We want to make a .config file in the ConnMan folder. It is recommended to call the file the name of the network you want to connect to. For example, a UoA-WiFi.config file would be created to connect to the UoA-WiFi network.
-11. Edit the file using an inbuilt text editor like nano or vim. We want to follow a format specified [here](http://www.erdahl.io/2016/05/connecting-to-ieee8021x-network-with.html). An example I used for UoA-WiFi.config is:
+10. Quit the ConnMan interface with the **quit** command, then execute _**cd /var/lib/connman**_ to navigate to the ConnMan folder.
+11. We want to make a .config file in the ConnMan folder. It is recommended to call the file the name of the network you want to connect to. For example, a UoA-WiFi.config file would be created to connect to the UoA-WiFi network.
+12. Edit the file using an inbuilt text editor like nano or vim. We want to follow a format specified [here](http://www.erdahl.io/2016/05/connecting-to-ieee8021x-network-with.html). An example I used for UoA-WiFi.config is:
 
 [service_UoA-WiFi]
-Type=wifi
-Name=UoA-WiFi
+Type=wifiName=UoA-WiFi
 EAP=peap
 Phase2=MSCHAPV2
 Identity=*my UPI ie. abcd123*
@@ -70,9 +69,9 @@ Passphrase=*my password*
 
 Make sure the spelling is correct!
 
-12. Save the file and reboot the robot.
-13. Follow steps 3-8 again. Provided your credentials are correct, you should be able to connect to the ieee8021x network without having to enter a password.
-14. Change the 
+13. Save the file and reboot the robot.
+14. Follow steps 3-8 again. Provided your credentials are correct, you should be able to connect to the ieee8021x network without having to enter a password.
+15. Change the 
 
 
 
