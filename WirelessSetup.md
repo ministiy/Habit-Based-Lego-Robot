@@ -8,7 +8,7 @@ Note: It is **much better** to use dualboot since there are no added complexity,
 
 ## How to enable wireless tethering
 1. Connect the computer to the robot via USB cable
-2. SSH to the robot in terminal. This can be done by opening a new terminal and executing **ssh robot@ev3dev.local**. The default password is **maker**.
+2. SSH to the robot in terminal. This can be done by opening a new terminal and executing **ssh robot<i></i>@ev3dev.local**. The default password is **maker**.
 3. Open ConnMan with the command **connmanctl**. Ignore the error _**Error getting VPN connections: ... **_. You should see 
 4. Enable WiFi by executing **enable wifi** in the ConnMan interface.
 5. Scan WiFi by executing **scan wifi** in the ConnMan interface.
