@@ -18,13 +18,15 @@ Note: It is **much better** to use dualboot since there are no added complexity,
 The following shows an example of what you would see up to this point.
 
 ![Steps 3-7](connman1.png)
+(Sourced from http://www.ev3dev.org/docs/tutorials/setting-up-wifi-using-the-command-line/)
 
 8. Note the different types of connections and security protocols. Find the network which you want to connect to.
 9. If your network's security is "managed_psk", then you can connect to the network by following the commands below:
 
 ![Managed PSK](connman2.png)
+(Sourced from http://www.ev3dev.org/docs/tutorials/setting-up-wifi-using-the-command-line/)
 
-After you have done this, skip to step ___
+After you have done this, skip to step 15.
 
 9b. However, if your network's security is "managed_ieee8021x" (as shown below for UoA-WiFi"), you would be unable to connect to the network using the above method. Instead, you would need a custom .config file on the robot.
 
@@ -46,25 +48,7 @@ Check that your spelling is correct!
 13. Save the file and reboot the robot.
 14. Follow steps 3-8 again. Provided your credentials are correct, you should be able to connect to the ieee8021x network without having to enter a password.
 
-15. If your robot detects the network , but is unable to connect to it, changing the network connection default to Linux default settings may help. This can be done by navigating on the robot:
+15. Once you have quit the ConnMan interface, quit the SSH with **exit**, disconnect the cable and reboot the robot. Provided your computer is connected to the same WiFi network as the robot, you should be able to SSH to the robot without the USB cable.
+
+Note: If your robot detects the network , but is unable to connect to it, changing the network connection default to Linux default settings may help. This can be done by navigating on the robot:
 **Wireless and Networks** > **Wi-Fi** > _**Your chosen network**_ > **Network Connections** > **IPv4** > **Change...** and select **Load Linux defaults**.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Once you have quit the ConnMan interface, quit the SSH with **exit**, disconnect the cable and reboot the robot. Provided your computer is connected to the same WiFi network as the robot, you should be able to SSH to the robot without the USB cable.
