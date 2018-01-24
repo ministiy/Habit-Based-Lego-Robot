@@ -36,12 +36,13 @@ After you have done this, skip to step 15.
 11. We want to make a .config file in the ConnMan folder. It is recommended to call the file the name of the network you want to connect to. For example, a UoA-WiFi.config file would be created to connect to the UoA-WiFi network.
 12. Edit the file using an inbuilt text editor like nano or vim. We want to follow a format specified [here](http://www.erdahl.io/2016/05/connecting-to-ieee8021x-network-with.html). An example I used for UoA-WiFi.config is:
 
+####UoA-WiFi.config
 [service_UoA-WiFi]\
 Type=wifiName=UoA-WiFi\
 EAP=peap\
 Phase2=MSCHAPV2\
 Identity=**Your UPI here (abcd123)**\
-Passphrase=**Your password**\
+Passphrase=**Your password**
 
 Check that your spelling is correct!
 
