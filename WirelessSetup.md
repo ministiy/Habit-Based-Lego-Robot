@@ -1,4 +1,4 @@
-# Summer Research Project - Supervised by Matthew Egbert
+# Wireless Setup
 
 ## Before you start:
 1. It is assumed your computer has a Linux OS with WiFi capabilities. You would also need to be able to connect to a WiFi network that you and the robot can share.
