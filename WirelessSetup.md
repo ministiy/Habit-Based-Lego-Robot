@@ -16,23 +16,9 @@ Note: It is **much better** to use dualboot since there are no added complexity,
 7. Execute **agent on**.
 
 The following shows an example of what you would see up to this point.
-<div>
-robot@ev3dev:~$ connmanctl
-Error getting VPN connections: The name net.connman.vpn was not provided by any
-connmanctl> enable wifi
-Enabled wifi
-connmanctl> scan wifi
-Scan completed for wifi
-connmanctl> services
-*AO Wired                ethernet_b827ebbde13c_cable
-                         wifi_e8de27077de3_hidden_managed_none
-    AH04044914           wifi_e8de27077de3_41483034303434393134_managed_psk
-    Frissie              wifi_e8de27077de3_46726973736965_managed_psk
-    ruijgt gast          wifi_e8de27077de3_7275696a67742067617374_managed_psk
-    schuur               wifi_e8de27077de3_736368757572_managed_psk
-connmanctl> agent on
-Agent registered
-</div>
+
+![Steps 3-7](connman1.png)
+Format: ![Alt Text](url)
 
 8. Note the different types of connections and security protocols. Find the network which you want to connect to.
 9. If your network's security is "managed_psk", then you can connect to the network by following the commands below:
