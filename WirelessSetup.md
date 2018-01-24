@@ -1,8 +1,7 @@
 # Wireless Setup
 
 ## Before you start:
-1. It is assumed your computer has a Linux OS with WiFi capabilities. You would also need to be able to connect to a WiFi network that you and the robot can share.
-Note: It is **much better** to use dualboot since there are no added complexity, but using VirtualBox will also works with the right setup.
+1. It is assumed your computer has a Linux OS with WiFi capabilities. You would also need to be able to connect to a WiFi network that you and the robot can share. It is **much better** to use dualboot since there are no added complexity, but using VirtualBox will also works with the right setup.
 2. Check if you are able to SSH to the robot via USB.
 3. Ensure that your robot has a compatible WiFi dongle. For more information, check [here](https://github.com/ev3dev/ev3dev/wiki/USB-Wi-Fi-Dongles)
 
