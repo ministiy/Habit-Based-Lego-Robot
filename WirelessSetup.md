@@ -18,29 +18,17 @@ Note: It is **much better** to use dualboot since there are no added complexity,
 The following shows an example of what you would see up to this point.
 
 ![Steps 3-7](connman1.png)
-Format: ![Alt Text](url)
 
 8. Note the different types of connections and security protocols. Find the network which you want to connect to.
 9. If your network's security is "managed_psk", then you can connect to the network by following the commands below:
 
-connmanctl> connect wifi_e8de27077de3_41      # You can use the TAB key at this point to autocomplete the name
-connmanctl> connect wifi_e8de27077de3_41483034303434393134_managed_psk
-Agent RequestInput wifi_e8de27077de3_41483034303434393134_managed_psk
-  Passphrase = [ Type=psk, Requirement=mandatory ]
-Passphrase? *************
-Connected wifi_e8de27077de3_41483034303434393134_managed_psk
-connmanctl> quit
+![Managed PSK](connman2.png)
 
 After you have done this, skip to step ___
 
 9b. However, if your network's security is "managed_ieee8021x" (as shown below for UoA-WiFi"), you would be unable to connect to the network using the above method. Instead, you would need a custom .config file on the robot.
 
-connmanctl> services
-*AO UoA-WiFi             wifi_74da38c7a306_556f412d57694669_managed_ieee8021x
-                         wifi_74da38c7a306_hidden_managed_psk
-    UoA-Guest-WiFi       wifi_74da38c7a306_556f412d47756573742d57694669_managed_none
-    eduroam              wifi_74da38c7a306_656475726f616d_managed_ieee8021x
-    sc-amar213-291105    wifi_74da38c7a306_73632d616d61723231332d323931313035_managed_psk
+![IEEE8021x](connman3.png)
     
 10. Quit the ConnMan interface with the **quit** command, then execute _**cd /var/lib/connman**_ to navigate to the ConnMan folder.
 11. We want to make a .config file in the ConnMan folder. It is recommended to call the file the name of the network you want to connect to. For example, a UoA-WiFi.config file would be created to connect to the UoA-WiFi network.
@@ -50,20 +38,16 @@ connmanctl> services
 Type=wifiName=UoA-WiFi
 EAP=peap
 Phase2=MSCHAPV2
-Identity=*my UPI ie. abcd123*
-Passphrase=*my password*
+Identity=**Your UPI here (abcd123)**
+Passphrase=**Your password**
 
-Make sure the spelling is correct!
+Check that your spelling is correct!
 
 13. Save the file and reboot the robot.
 14. Follow steps 3-8 again. Provided your credentials are correct, you should be able to connect to the ieee8021x network without having to enter a password.
-15. Change the 
 
-
-
-
-
-
+15. If your robot detects the network , but is unable to connect to it, changing the network connection default to Linux default settings may help. This can be done by navigating on the robot:
+**Wireless and Networks** > **Wi-Fi** > _**Your chosen network**_ > **Network Connections** > **IPv4** > **Change...** and select **Load Linux defaults**.
 
 
 
