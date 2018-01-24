@@ -51,11 +51,11 @@ Check that your spelling is correct!
 
 16. Once you have quit the ConnMan interface, quit the SSH with **exit**, disconnect the cable and reboot the robot. Provided your computer is connected to the same WiFi network as the robot, you should be able to SSH to the robot without the USB cable.
 
-Note: If your robot detects the network , but is unable to connect to it, changing the network connection default to Linux default settings may help. This can be done by navigating on the robot:
+**Note**: If your robot detects the network , but is unable to connect to it, changing the network connection default to Linux default settings may help. This can be done by navigating on the robot:
 **Wireless and Networks** > **Wi-Fi** > _**Your chosen network**_ > **Network Connections** > **IPv4** > **Change...** and select **Load Linux defaults**.
 
-Note: If you are unable to ssh to the robot in the future, it may be that the IP address of the robot has changed.
+**Note**: If you are unable to ssh to the robot in the future, it may be that the IP address of the robot has changed.
 You can find the IP address of the robot on the brick's screen at the top left hand corner. From there, you can ssh to the robot by either:
-* Executing **ssh robot@*robot's IP address* ** (e.g. ssh robot@123.45.67.234), or
+* Executing **ssh robot@*robot's IP address*** (e.g. ssh robot@123.45.67.234), or
 * Adding/editing an entry for ev3dev.local in the /etc/hosts file with the new IP address
 
