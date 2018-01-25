@@ -108,3 +108,22 @@ class DataManipulation:
             most_visited_state.append(sorted(j.items(),key=lambda t: t[1], reverse=True)[0][1])
 
         return np.array(most_visited_state)
+
+    def digitize_total_values(self, to_be_digitized, type):
+        first_array_bin = np.arange(0, self.__NUM_OF_BINS)
+        second_array_bin = np.arange(0, (self.__NUM_OF_BINS**2), self.__NUM_OF_BINS)
+        third_array_bin = np.arange(0, (self.__NUM_OF_BINS**3), self.__NUM_OF_BINS**2)
+
+        if type == '2d':
+            #numpy digitize assigns bin from 1 to 10.  but we want to use 0 to 9    
+            xArray = np.digitize(to_be_digitized % self.__NUM_OF_BINS, first_array_bin) - 1
+            yArray = np.digitize(to_be_digitized, second_array_bin) - 1
+
+            return xArray, yArray
+        elif type == '3d':
+            #numpy digitize assigns bin from 1 to 10.  but we want to use 0 to 9
+            xArray = np.digitize(to_be_digitized % self.__NUM_OF_BINS, first_array_bin) - 1
+            yArray = np.digitize(to_be_digitized % (self.__NUM_OF_BINS**2), second_array_bin) - 1
+            zArray = np.digitize(to_be_digitized, third_array_bin) - 1
+
+            return xArray, yArray, zArray
