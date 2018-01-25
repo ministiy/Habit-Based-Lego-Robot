@@ -1,0 +1,110 @@
+#!/usr/bin/env python3
+
+import csv
+import pandas as pd
+import numpy as np
+
+class DataManipulation:
+
+    def __init__(self):
+        self.__data = pd.read_csv("output.csv")
+        self.__NUM_OF_BINS = 10
+        self.__total = 0
+        self.__total_motor = None
+        self.__total_sensor = None
+        self.__total_us = None
+
+
+    def normalized_motor(self):
+        self.__data['right motor'] = self.__data['right motor'].values/1000 #min -1 max 1
+        self.__data['left motor'] = self.__data['left motor'].values/1000 #min -1 max 1
+
+    def normalized_0_to_1(self):
+        self.__total_motor = (0.5*((self.__data['left motor'].values + self.__data['right motor'].values)/2) + 0.5) * self.__NUM_OF_BINS
+        self.__total_sensor = ((self.__data['left sensor'].values + self.__data['right sensor'].values) / 2)  * self.__NUM_OF_BINS
+        self.__total_us = ((self.__data['left ultrasound sensor'].values + self.__data['right ultrasound sensor'].values) / 2)  * self.__NUM_OF_BINS
+        
+        for i in range(len(self.__total_motor)):
+            if self.__total_motor[i] == self.__NUM_OF_BINS:
+                self.__total_motor[i] = self.__NUM_OF_BINS-1
+
+            if self.__total_sensor[i] == self.__NUM_OF_BINS:
+                self.__total_sensor[i] == self.__NUM_OF_BINS-1
+
+            if self.__total_motor[i] == self.__NUM_OF_BINS:
+                self.__total_motor[i] == self.__NUM_OF_BINS-1
+
+        self.__total_motor = np.floor(self.__total_motor).astype(int)
+        self.__total_sensor = np.floor(self.__total_sensor).astype(int)
+        self.__total_us = np.floor(self.__total_us).astype(int)
+
+        return self.__total_motor,self.__total_sensor,self.__total_us
+
+    def get_NUM_OF_BINS(self):
+        return self.__NUM_OF_BINS
+
+    def get_data(self):
+        return self.__data
+
+    def get_total_motor(self):
+        return self.__total_motor
+
+    def get_total_sensor(self):
+        return self.__total_sensor
+
+    def get_total_us(self):
+        return self.__total_us
+
+    def normalized_minus1_to_1(self):
+        pass
+
+    def convert_values_to_bins(self, firstDimension=None, secondDimension=None, thirdDimension=None):
+        if self.__total is not 0:
+            self.__total = 0
+
+        if firstDimension is not None: 
+            self.__total += firstDimension 
+        if secondDimension is not None:
+            self.__total += self.__NUM_OF_BINS * secondDimension
+        if thirdDimension is not None:
+            self.__total += (self.__NUM_OF_BINS**2) * thirdDimension
+
+        self.__total = np.floor(self.__total).astype(int)
+        return self.__total
+
+    """
+        To remove where state goes to itself (e.g A A A A B will be reduced to A B)
+    """
+    def remove_continous_state(self):
+        return np.array([self.__total[i] for i in range(len(self.__total)-1) if self.__total[i] != self.__total[i+1]])
+
+    """
+        This detects how many times a state goes to another state. 
+        Represented with a dictionary in a dictionary. (e.g {A : {B: 2}} means bin A moves to bin B 2 times.)
+    """
+    def transition_frequency(self, transition_array):
+        transition_with_frequency = {}
+        for i in range(len(transition_array)-1):
+            if transition_array[i] not in transition_with_frequency:
+                transition_with_frequency[transition_array[i]] = {}
+                transition_with_frequency[transition_array[i]][transition_array[i+1]] = 1
+
+            elif transition_array[i+1] in transition_with_frequency[transition_array[i]]:
+                transition_with_frequency[transition_array[i]][transition_array[i+1]] += 1
+
+            elif transition_array[i+1] not in transition_with_frequency[transition_array[i]]:
+                transition_with_frequency[transition_array[i]][transition_array[i+1]] = 1
+
+        return transition_with_frequency
+
+    """
+    This is to make a new list where every 3 values indicate source, destination, and frequency visited.
+    """
+    def most_visited_state_transition(self, transition_with_frequency):
+        most_visited_state = []
+        for i,j in transition_with_frequency.items():
+            most_visited_state.append(i)
+            most_visited_state.append(sorted(j.items(),key=lambda t: t[1], reverse=True)[0][0])
+            most_visited_state.append(sorted(j.items(),key=lambda t: t[1], reverse=True)[0][1])
+
+        return np.array(most_visited_state)
