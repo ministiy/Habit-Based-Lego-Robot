@@ -16,20 +16,20 @@
 
 The following shows an example of what you would see up to this point.
 
-![Steps 3-7](connman1.png)
+![Steps 3-7](res/connman1.png)
 (Sourced from http://www.ev3dev.org/docs/tutorials/setting-up-wifi-using-the-command-line/)
 
 8. Note the different types of connections and security protocols. Find the network which you want to connect to.
 9. If your network's security is **managed_psk**, then you can connect to the network by following the commands below:
 
-![Managed PSK](connman2.png)
+![Managed PSK](res/connman2.png)
 (Sourced from http://www.ev3dev.org/docs/tutorials/setting-up-wifi-using-the-command-line/)
 
 After you have done this, skip to step 16.
 
 10. However, if your network's security is **managed_ieee8021x** (as shown below for UoA-WiFi"), you would be unable to connect to the network using the above method. Instead, you would need a custom .config file on the robot.
 
-![IEEE8021x](connman3.png)
+![IEEE8021x](res/connman3.png)
     
 11. Quit the ConnMan interface with the **quit** command, then execute **cd /var/lib/connman** to navigate to the ConnMan folder.
 12. We want to make a .config file in the ConnMan folder. It is recommended to call the file the name of the network you want to connect to. For example, a UoA-WiFi.config file would be created to connect to the UoA-WiFi network.
