@@ -27,8 +27,10 @@ class DataManipulation:
         for i in range(len(self.__total_motor)):
             if self.__total_motor[i] == self.__NUM_OF_BINS:
                 self.__total_motor[i] = self.__NUM_OF_BINS-1
+
             if self.__total_sensor[i] == self.__NUM_OF_BINS:
                 self.__total_sensor[i] == self.__NUM_OF_BINS-1
+
             if self.__total_motor[i] == self.__NUM_OF_BINS:
                 self.__total_motor[i] == self.__NUM_OF_BINS-1
 
@@ -38,10 +40,28 @@ class DataManipulation:
 
         return self.__total_motor,self.__total_sensor,self.__total_us
 
+    def get_NUM_OF_BINS(self):
+        return self.__NUM_OF_BINS
+
+    def get_data(self):
+        return self.__data
+
+    def get_total_motor(self):
+        return self.__total_motor
+
+    def get_total_sensor(self):
+        return self.__total_sensor
+
+    def get_total_us(self):
+        return self.__total_us
+
     def normalized_minus1_to_1(self):
         pass
 
-    def calculate_total(self, firstDimension=None, secondDimension=None, thirdDimension=None):
+    def convert_values_to_bins(self, firstDimension=None, secondDimension=None, thirdDimension=None):
+        if self.__total is not 0:
+            self.__total = 0
+
         if firstDimension is not None: 
             self.__total += firstDimension 
         if secondDimension is not None:
@@ -52,5 +72,39 @@ class DataManipulation:
         self.__total = np.floor(self.__total).astype(int)
         return self.__total
 
+    """
+        To remove where state goes to itself (e.g A A A A B will be reduced to A B)
+    """
     def remove_continous_state(self):
-        return [self.__total[i] for i in range(len(self.__total)-1) if self.__total[i+1] != self.__total[i]]
+        return np.array([self.__total[i] for i in range(len(self.__total)-1) if self.__total[i] != self.__total[i+1]])
+
+    """
+        This detects how many times a state goes to another state. 
+        Represented with a dictionary in a dictionary. (e.g {A : {B: 2}} means bin A moves to bin B 2 times.)
+    """
+    def transition_frequency(self, transition_array):
+        transition_with_frequency = {}
+        for i in range(len(transition_array)-1):
+            if transition_array[i] not in transition_with_frequency:
+                transition_with_frequency[transition_array[i]] = {}
+                transition_with_frequency[transition_array[i]][transition_array[i+1]] = 1
+
+            elif transition_array[i+1] in transition_with_frequency[transition_array[i]]:
+                transition_with_frequency[transition_array[i]][transition_array[i+1]] += 1
+
+            elif transition_array[i+1] not in transition_with_frequency[transition_array[i]]:
+                transition_with_frequency[transition_array[i]][transition_array[i+1]] = 1
+
+        return transition_with_frequency
+
+    """
+    This is to make a new list where every 3 values indicate source, destination, and frequency visited.
+    """
+    def most_visited_state_transition(self, transition_with_frequency):
+        most_visited_state = []
+        for i,j in transition_with_frequency.items():
+            most_visited_state.append(i)
+            most_visited_state.append(sorted(j.items(),key=lambda t: t[1], reverse=True)[0][0])
+            most_visited_state.append(sorted(j.items(),key=lambda t: t[1], reverse=True)[0][1])
+
+        return np.array(most_visited_state)
