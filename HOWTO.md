@@ -7,20 +7,41 @@ If you want to move files from your desktop to the robot:
 5. If you want to execute the files from the robot directly without SSH, run ***chmod +x /path/to/file*** when you are connected to the robot through SSH
 
 ## Establishing a Client-Server connection between robot and computer
-1. Make sure you have the following files on the **computer**. They should be in the same directory.
+1. Make sure you have the following files on the **computer**. They should be in the same folder. They are located 
+on this repository in the [server](/server) folder.
 * **SocketServer.py** - The "server" script
 * **writeCSV.py** - Used to write data to a CSV file
 * **Constant.py** - Holds important shared constants between client and server machines
-* **stopmotors.sh** - A bash script to stop motors in the event that they do not stop
 
-2. Make sure you have the following Python files on the **robot**. They should be in the same directory.
-* **SocketClient.py**
-* **Ev3devSetup.py**
-* **Constant.py**
+2. Make sure you have the following Python files on the **robot**. They should be in the same folder. They are located 
+on this repository in the [client](/client) folder
+* **SocketClient.py** - The "client" script
+* **Ev3devSetup.py** - Additional stuff to setup ev3dev robot sensors and motors
+* **Constant.py** - Holds important shared constants between client and server machines
+* **stopmotors.sh** - A bash script to stop motors in the event that they do not stop
 
 3. Execute the **SocketServer.py** script in terminal. Use Python 3. (**python3 SocketServer.py**)
 4. Execute the **SocketClient.py** script. There are two main ways to execute the **SocketClient.py**:
 * **Via SSH** - SSH to the robot, navigate to where **SocketClient.py** is located and execute it. Use Python 3.
 * **Via the robot itself** - Using the Mindstorms brick screen, you should be able to navigate through the file system on the robot. Execute the file by selecting **SocketClient.py**.
 
-5. 
+5. If the connection is successful, you should see something like this in the terminal:
+![Server-Running](/res/howto1.png)
+
+Select an option from the printed menu by pressing the corresponding number on your keyboard. For example, press '1' on your keyboard to select **Keyboard** mode.
+* **Keyboard** - Allows the user to control the robot movements with WASD controls. (Requires your cursor to be in the terminal window while running)
+* **Braitenburg** - Represents a Braitenburg machine
+* **Random** - Random movements by the robot
+
+6. After you have selected an option, you should see values being continuously printed on the terminal as shown below:
+![Server-Result](/res/howto2.png)
+* **ls** - Left light sensor value
+* **rs** - Right light sensor value
+* **luv** - Left ultrasound sensor value
+* **ruv** - Right ultrasound sensor value
+* **lm** - Left motor speed
+* **rm** - Right motor speed
+
+7. To quit, press **q** on your keyboard at any point in time. The **SocketServer.py** script should terminate on the server side, and the **SocketClient.py** script on the robot should terminate automatically.
+
+**Note:** If the program has successfully terminated but the robot continues to move, execute the **./stopmotors.sh** bash script to force the motors to stop. **THIS IS A BUG!**
