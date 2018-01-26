@@ -44,4 +44,5 @@ Select an option from the printed menu by pressing the corresponding number on y
 
 7. To quit, press **q** on your keyboard at any point in time. The **SocketServer.py** script should terminate on the server side, and the **SocketClient.py** script on the robot should terminate automatically.
 
-**Note:** If the program has successfully terminated but the robot continues to move, execute the **./stopmotors.sh** bash script to force the motors to stop. **THIS IS A BUG!**
+**Note:** If the program has successfully terminated but the robot continues to move, execute the **./stopmotors.sh** bash script on the robot to force the motors to stop. This can be done through SSH or directly on the robot itself.
+**THIS IS A BUG**
