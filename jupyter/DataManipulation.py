@@ -7,7 +7,7 @@ import numpy as np
 class DataManipulation:
 
     def __init__(self):
-        self.__data = pd.read_csv("output.csv")
+        self.__data = pd.read_csv("../server/output.csv")
         self.__NUM_OF_BINS = 10
         self.__total = 0
         self.__total_motor = None
