@@ -6,3 +6,6 @@ For wired setup, go to [Wired Setup](http://www.ev3dev.org/docs/tutorials/connec
 For wireless setup, go to [Wireless Setup](WirelessSetup.md)
 
 Note: It is **much better** to use dualboot since there are no added complexity, but using VirtualBox will also works with the right setup.
+
+## How to run the client-server 
+Setting up and running the client-server setup can be done by following the [tutorial](HOWTO.md).
