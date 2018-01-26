@@ -42,7 +42,7 @@ def startNewThread(name, writer):
 # ==============================================
 
 def openCSVFile():
-    writer = WriteCSV('output.csv')
+    writer = WriteCSV('../jupyter/output.csv')
     writer.openFile()
     return writer
 
