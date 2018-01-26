@@ -9,3 +9,11 @@ Note: It is **much better** to use dualboot since there are no added complexity,
 
 ## How to run the client-server 
 Setting up and running the client-server setup can be done by following the [tutorial](HOWTO.md).
+
+## Folders
+
+    server: folder containing files to be able to run the server on the computer side
+    client: folder containing files to be able to run the robot and connect to the server
+    res: folder containing images for documentation.
+    jupyter: folder containing jupyter notebooks for data visualization.
+
