@@ -43,6 +43,9 @@ class DataManipulation:
     def get_NUM_OF_BINS(self):
         return self.__NUM_OF_BINS
 
+    def set_NUM_OF_BINS(self, NUM_OF_BINS):
+        self.__NUM_OF_BINS = NUM_OF_BINS
+
     def get_data(self):
         return self.__data
 
@@ -98,7 +101,7 @@ class DataManipulation:
         return transition_with_frequency
 
     """
-    This is to make a new list where every 3 values indicate source, destination, and frequency visited.
+        This is to make a new list where every 3 values indicate source, destination, and frequency visited.
     """
     def most_visited_state_transition(self, transition_with_frequency):
         most_visited_state = []
@@ -109,6 +112,10 @@ class DataManipulation:
 
         return np.array(most_visited_state)
 
+    """Separate values into arrays of bins
+    
+    Take the array values and digitize it to bins to determine which bin each value belongs to.
+    """
     def digitize_total_values(self, to_be_digitized, type):
         first_array_bin = np.arange(0, self.__NUM_OF_BINS)
         second_array_bin = np.arange(0, (self.__NUM_OF_BINS**2), self.__NUM_OF_BINS)

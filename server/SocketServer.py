@@ -96,16 +96,10 @@ def Main():
     # Robot controls on main thread
     # Starting the program on server side (and client side)
     print("Connection from: " + str(addr)) #Here is where we say "Connected to the EV3DEV robot"
-    movementType = int(input("1.Keyboard 2.Braitenburg 3.Random"))
+    movementType = int(input("1.Keyboard 2.Braitenburg 3.Random (Press q to quit after choosing)"))
+    print("{0} is chosen, press q to quit".format(movementType))
     conn.send(str(movementType).encode())
     while True:
-        #data = conn.recv(1024).decode()
-        #if not data:
-        #    break
-        #print("from connected  user: " + str(data))
-
-        # data = str(data).upper()
-
         k = getch()
 
         print("sending: " + str(k))
