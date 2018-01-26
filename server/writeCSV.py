@@ -14,10 +14,8 @@ class WriteCSV:
         # if file exist, clear the file.
         if fileCheck.is_file():
             self.file = open(self.filename, 'w')
-            #file.close()
 
         self.file = open(self.filename, 'a', newline="")
-        #self.file = file
 
     def closeFile(self):
         self.file.close()
@@ -25,7 +23,6 @@ class WriteCSV:
     def writeHeader(self):
         header = ['left sensor', 'right sensor', 'left ultrasound sensor', 'right ultrasound sensor', 'left motor',
                   'right motor']
-        #with open('output.csv', 'w', newline="") as output_file:
         wr = csv.writer(self.file, delimiter=',', quoting=csv.QUOTE_ALL)
         wr.writerow(header)
         self.file.flush()
