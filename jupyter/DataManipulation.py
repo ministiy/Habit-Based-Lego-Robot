@@ -14,11 +14,18 @@ class DataManipulation:
         self.__total_sensor = None
         self.__total_us = None
 
+    """Normalizing motor values
 
+    Normalized the left and right motor values ranging from -1000 to 1000, to be from -1 to 1
+    """
     def normalized_motor(self):
         self.__data['right motor'] = self.__data['right motor'].values/1000 #min -1 max 1
         self.__data['left motor'] = self.__data['left motor'].values/1000 #min -1 max 1
 
+    """Normalizing values ranging from 0 to 1
+    
+    Normalized all sensor, motor and ultrasound values to be in range from 0 to 1.
+    """
     def normalized_0_to_1(self):
         self.__total_motor = (0.5*((self.__data['left motor'].values + self.__data['right motor'].values)/2) + 0.5) * self.__NUM_OF_BINS
         self.__total_sensor = ((self.__data['left sensor'].values + self.__data['right sensor'].values) / 2)  * self.__NUM_OF_BINS
@@ -61,6 +68,13 @@ class DataManipulation:
     def normalized_minus1_to_1(self):
         pass
 
+    """Converting the total values to bin number
+    
+    Count the total with the formula
+    DIM1 * (NOB * DIM2) * ((NOB**2) * DIM3)
+
+    If there is no third dimension, it would just count until the second dimension.
+    """
     def convert_values_to_bins(self, firstDimension=None, secondDimension=None, thirdDimension=None):
         if self.__total is not 0:
             self.__total = 0
@@ -75,15 +89,17 @@ class DataManipulation:
         self.__total = np.floor(self.__total).astype(int)
         return self.__total
 
-    """
-        To remove where state goes to itself (e.g A A A A B will be reduced to A B)
+    """Removing transition where state goes to itself.
+        
+    To remove where state goes to itself (e.g A A A A B will be reduced to A B)
     """
     def remove_continous_state(self):
         return np.array([self.__total[i] for i in range(len(self.__total)-1) if self.__total[i] != self.__total[i+1]])
 
-    """
-        This detects how many times a state goes to another state. 
-        Represented with a dictionary in a dictionary. (e.g {A : {B: 2}} means bin A moves to bin B 2 times.)
+    """Make a dictionary inside a dictionary from transition array without frequency
+    
+    This detects how many times a state goes to another state. 
+    Represented with a dictionary in a dictionary. (e.g {A : {B: 2}} means bin A moves to bin B 2 times.)
     """
     def transition_frequency(self, transition_array):
         transition_with_frequency = {}
@@ -100,8 +116,9 @@ class DataManipulation:
 
         return transition_with_frequency
 
-    """
-        This is to make a new list where every 3 values indicate source, destination, and frequency visited.
+    """Translate a transition with frequency dictionary to transition array with frequency
+    
+    This is to make a new list where every 3 values indicate source, destination, and frequency visited.
     """
     def most_visited_state_transition(self, transition_with_frequency):
         most_visited_state = []

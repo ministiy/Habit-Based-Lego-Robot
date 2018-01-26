@@ -27,6 +27,10 @@ class SensorBackgroundThread (threading.Thread):
         while True:
             sensorValues(self.name)
 
+"""Cleaning up
+
+Closing socket, stop the robot from moving and terminate the program.
+"""
 def cleanup():
     print('cleaning up...')
     mySocket.close()
@@ -95,6 +99,10 @@ def stopMotor():
 
 # ==============================================
 
+"""Package sending
+
+Dumps the package into a pickle to make it easier to send data then send it through socket.
+"""
 def sendPackages(package):
     dataString = pickle.dumps(package)
     mySocket.send(dataString)
@@ -103,6 +111,10 @@ def sendPackages(package):
 # ==== DATA COLLECTION FUNCTIONS ==== #
 # ==============================================
 
+"""Control robot through keyboard
+
+Moving the robot with the keyboard W,A,S,D to represent moving forward, back, left and right.
+"""
 def keyboardControl():
 
     # Get original time as a basis to run the following code every n seconds (where n <= 0.1)
@@ -133,6 +145,11 @@ def keyboardControl():
 
         time.sleep(0.05 - ((time.time() - starttime) % 0.05))
 
+"""Braitenburg robot movement
+
+This is a braitenburg where the robot is aggressive toward the source.
+This is copied and modified from cs765_1_of_6.py files from Matthew Egbert.
+"""
 def braitenburgMovement():
 
     # Get original time as a basis to run the following code every n seconds (where n <= 0.1)
@@ -183,6 +200,11 @@ def braitenburgMovement():
 
         time.sleep(0.05 - ((time.time() - starttime) % 0.05))
 
+"""Random robot movement
+
+This is supposed to be a random movement from the robot where as we see from 0 to 3 which one the robot choose.
+This is just a test function if needed.
+"""
 def randomMovement():
     it = 0
     # Get original time as a basis to run the following code every n seconds (where n <= 0.1)
@@ -258,7 +280,6 @@ def startNewThread(name):
 # Code is based on https://stackoverflow.com/questions/41294848/python-sockets-how-to-connect-between-two-computers-on-the-same-wifi
 def Main():
     #Host IP is IPv4 address of the computer found basedy Connection Information on Linux
-    #host = '192.168.1.66'
     host = Constant.IP_ADDRESS
     port = 5000
     global mySocket
@@ -276,7 +297,6 @@ def Main():
         print("1 is chosen")
         while True:
             k = mySocket.recv(2048).decode()
-            #print('Received from server: ' + k, flush=True)
             if k == 'w':
                 forward()
             elif k == 's':
@@ -310,9 +330,8 @@ def Main():
             if k == 'q':
                 break
 
-    # Commands received from the server are translated into actual robot movements
+    # Cleaning up like closing socket and csv files after q is pressed.
     cleanup()
-    # Close the socket after the program has quit from the server side
 
 
 if __name__ == '__main__':

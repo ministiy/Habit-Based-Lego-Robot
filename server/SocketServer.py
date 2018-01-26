@@ -16,17 +16,19 @@ class CSVBackgroundThread (threading.Thread):
         self.name = name
         self.counter = counter
         self.writer = writer
+
    def run(self):
         # Printing and writing to CSV file
         while True:
             try:
+                # Receive the values that the client/robot sent
                 data = conn.recv(4096)
                 listOfValues = pickle.loads(data)
+                # Since the values is sent every PACKAGE_SIZE, we need to separate it into 6 values every time.
                 for i in range(Constant.PACKAGE_SIZE):
                     print('ls:%0.3f rs:%0.3f lu:%0.3f ru:%0.3f lm:%0.3f rm:%0.3f' % (listOfValues[0], listOfValues[1], listOfValues[2], listOfValues[3], listOfValues[4], listOfValues[5]))
                     self.writer.writeData(listOfValues[:6])
                     listOfValues = listOfValues[6:]
-                    #   print(listOfValues)
             except:
                 continue
                 
@@ -50,6 +52,10 @@ def openCSVFile():
 
 # ==== ROBOT COMMAND FUNCTIONS ==== #
 # ==============================================
+"""Get character
+
+Getting the character pressed from keyboard and translating it for the robot to move.
+"""
 def getch():
     fd = sys.stdin.fileno()
     old_settings = termios.tcgetattr(fd)
@@ -99,6 +105,7 @@ def Main():
     movementType = int(input("1.Keyboard 2.Braitenburg 3.Random (Press q to quit after choosing)"))
     print("{0} is chosen, press q to quit".format(movementType))
     conn.send(str(movementType).encode())
+
     while True:
         k = getch()
 
