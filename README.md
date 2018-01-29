@@ -18,4 +18,8 @@ Setting up and running the client-server setup can be done by following the [tut
     jupyter: folder containing jupyter notebooks for data visualization.
 
 ## Livetrack robot values to Jupyter
-
+1. Go to jupyter folder and run **jupyter notebook** in terminal.
+2. Open the notebook in jupyter localhost that is opened in your browser
+3. Start the robot with the client-server scripts.
+4. Run the jupyter cell that you want to see the result of.
+5. See the graph update automatically.
