@@ -20,12 +20,16 @@ on this repository in the [client](/client) folder
 * **Constant.py** - Holds important shared constants between client and server machines
 * **stopmotors.sh** - A bash script to stop motors in the event that they do not stop
 
-3. Execute the **SocketServer.py** script in terminal. Use Python 3. (**python3 SocketServer.py**)
-4. Execute the **SocketClient.py** script. There are two main ways to execute the **SocketClient.py**:
+3. Make sure **Constant.py** contains the IP address of the computer. The server's copy can be edited directly on the computer whereas the client's copy can be edited via ssh.
+To do this, open the file and change the value to the **IPv4 address** of the computer. Provided you are connected to a shared WiFi network, this can be found by going to **Connection Information** on Linux. Below is an example of what you should see and what values you should match:
+![Constant.py IP](/res/howto3.png)
+
+4. Execute the **SocketServer.py** script in terminal. Use Python 3 (**python3 SocketServer.py**). In order for the Jupyter live tracking notebooks to work, the terminal should be opened in the **server** folder. 
+5. Execute the **SocketClient.py** script. There are two main ways to execute the **SocketClient.py**:
 * **Via SSH** - SSH to the robot, navigate to where **SocketClient.py** is located and execute it. Use Python 3.
 * **Via the robot itself** - Using the Mindstorms brick screen, you should be able to navigate through the file system on the robot. Execute the file by selecting **SocketClient.py**.
 
-5. If the connection is successful, you should see something like this in the terminal:
+6. If the connection is successful, you should see something like this in the terminal:
 ![Server-Running](/res/howto1.png)
 
 Select an option from the printed menu by pressing the corresponding number on your keyboard. For example, press '1' on your keyboard to select **Keyboard** mode.
@@ -33,7 +37,7 @@ Select an option from the printed menu by pressing the corresponding number on y
 * **Braitenburg** - Represents a Braitenburg machine
 * **Random** - Random movements by the robot
 
-6. After you have selected an option, you should see values being continuously printed on the terminal as shown below:
+7. After you have selected an option, you should see values being continuously printed on the terminal as shown below:
 ![Server-Result](/res/howto2.png)
 * **ls** - Left light sensor value
 * **rs** - Right light sensor value
@@ -42,7 +46,7 @@ Select an option from the printed menu by pressing the corresponding number on y
 * **lm** - Left motor speed
 * **rm** - Right motor speed
 
-7. To quit, press **q** on your keyboard at any point in time. The **SocketServer.py** script should terminate on the server side, and the **SocketClient.py** script on the robot should terminate automatically.
+8. To quit, press **q** on your keyboard at any point in time. The **SocketServer.py** script should terminate on the server side, and the **SocketClient.py** script on the robot should terminate automatically.
 
 **Note:** If the program has successfully terminated but the robot continues to move, execute the **./stopmotors.sh** bash script on the robot to force the motors to stop. This can be done through SSH or directly on the robot itself.
 **THIS IS A BUG**

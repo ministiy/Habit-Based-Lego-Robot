@@ -58,5 +58,10 @@ Check that your spelling is correct!
 If you are unable to ssh to the robot in the future, it may be that the IP address of the robot has changed.
 You can find the IP address of the robot on the brick's screen at the top left hand corner. From there, you can ssh to the robot by either:
 * Executing **ssh robot@*robot's IP address*** (e.g. ssh robot@123.45.67.234), or
-* Adding/editing an entry for ev3dev.local in the /etc/hosts file with the new IP address
+* Adding/editing an entry for ev3dev.local in the /etc/hosts file with the new IP address. A example screenshot of /etc/hosts is shown below:
+
+
+![hosts file](res/wireless1.png)
+
+Here I have two entries of ev3dev.local, but only one is needed. 
 
