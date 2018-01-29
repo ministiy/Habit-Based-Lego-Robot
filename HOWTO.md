@@ -24,7 +24,7 @@ on this repository in the [client](/client) folder
 To do this, open the file and change the value to the **IPv4 address** of the computer. Provided you are connected to a shared WiFi network, this can be found by going to **Connection Information** on Linux. Below is an example of what you should see and what values you should match:
 ![Constant.py IP](/res/howto3.png)
 
-4. Execute the **SocketServer.py** script in terminal. Use Python 3. (**python3 SocketServer.py**)
+4. Execute the **SocketServer.py** script in terminal. Use Python 3 (**python3 SocketServer.py**). In order for the Jupyter live tracking notebooks to work, the terminal should be opened in the **server** folder. 
 5. Execute the **SocketClient.py** script. There are two main ways to execute the **SocketClient.py**:
 * **Via SSH** - SSH to the robot, navigate to where **SocketClient.py** is located and execute it. Use Python 3.
 * **Via the robot itself** - Using the Mindstorms brick screen, you should be able to navigate through the file system on the robot. Execute the file by selecting **SocketClient.py**.
