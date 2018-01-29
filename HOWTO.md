@@ -22,7 +22,7 @@ on this repository in the [client](/client) folder
 
 3. Make sure **Constant.py** contains the IP address of the computer. The server's copy can be edited directly on the computer whereas the client's copy can be edited via ssh.
 To do this, open the file and change the value to the **IPv4 address** of the computer. Provided you are connected to a shared WiFi network, this can be found by going to **Connection Information** on Linux. Below is an example of what you should see and what values you should match:
-![Constant.py IP](/res/howto4.png)
+![Constant.py IP](/res/howto3.png)
 
 4. Execute the **SocketServer.py** script in terminal. Use Python 3. (**python3 SocketServer.py**)
 5. Execute the **SocketClient.py** script. There are two main ways to execute the **SocketClient.py**:
