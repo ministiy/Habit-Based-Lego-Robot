@@ -16,3 +16,6 @@ Setting up and running the client-server setup can be done by following the [tut
     client: folder containing files to be able to run the robot and connect to the server.
     res: folder containing images for documentation.
     jupyter: folder containing jupyter notebooks for data visualization.
+
+## Livetrack robot values to Jupyter
+
