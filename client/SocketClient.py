@@ -10,6 +10,7 @@ import Constant
 import time
 import random
 import subprocess
+import math
 
 
 # ============================================
@@ -96,6 +97,12 @@ def right():
 def stopMotor():
     motor_left.stop()
     motor_right.stop()
+
+# ==============================================
+
+def changeMotorSpeed(left_motor_sp, right_motor_sp):
+    motor_left.run_forever(speed_sp=left_motor_sp)
+    motor_right.run_forever(speed_sp=right_motor_sp)
 
 # ==============================================
 
@@ -269,6 +276,13 @@ def randomMovement():
         time.sleep(0.05 - ((time.time() - starttime) % 0.05))
 
 # ==============================================
+"""Controller movement
+Use of a gamepad controller to control the robot movements
+"""
+def controllerMovement():
+    keyboardControl()
+
+# ==============================================
 
 def startNewThread(name):
     # Create a new daemon thread just for taking in sensory-motor values
@@ -329,6 +343,21 @@ def Main():
             k = mySocket.recv(2048).decode()
             if k == 'q':
                 break
+
+    elif movementType == 4:
+        controllerThread = threading.Thread(target=controllerMovement)
+        controllerThread.daemon = True
+        controllerThread.start()
+        print("4 is chosen")
+        while True:
+            k = mySocket.recv(2048)
+            newValues = pickle.loads(k)
+
+            if math.isnan(newValues[0]):
+                break
+            lmv = int(newValues[0]*1000)
+            rmv = int(newValues[1]*1000)
+            changeMotorSpeed(lmv,rmv)
 
     # Cleaning up like closing socket and csv files after q is pressed.
     cleanup()

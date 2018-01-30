@@ -6,6 +6,7 @@ import threading
 import pickle
 from writeCSV import WriteCSV
 import Constant
+from inputs import get_gamepad
 
 # A thread class from https://www.tutorialspoint.com/python/python_multithreading.htm
 # This class represents a background thread used by the server to store collected data into a .csv file
@@ -106,15 +107,71 @@ def Main():
     print("{0} is chosen, press q to quit".format(movementType))
     conn.send(str(movementType).encode())
 
-    while True:
-        k = getch()
+    if movementType == 4:
 
-        print("sending: " + str(k))
-        conn.send(k.encode())
-        print("Sent")
+        exitFlag = 0
+        lm = 0
+        rm = 0
 
-        if k == 'q':
-            break;
+        while True:
+
+            events = get_gamepad()
+
+
+
+            for event in events:
+
+                #print("Event type = " + event.ev_type + ", Event code = " + event.code + ", Event state = " + str(event.state))
+
+                if event.code == 'MSC_SCAN' and event.state == 589836:
+                    exitFlag = 1
+                    break
+
+                if event.code == 'ABS_Y':
+                    if event.state < 128:  # moving forwards
+                        lm = (128 - event.state) / 128
+                        rm = (128 - event.state) / 128
+                        print(lm, rm)
+                    else:
+                        lm = -(event.state - 128) / 128
+                        rm = -(event.state - 128) / 128
+
+                # Left/right movements override forward/backward movements
+                if event.code == 'ABS_X':
+                    #print("Turning somewhere with event state=" + str(event.state))
+                    if event.state < 128:  # analog to go left
+                        #lm = lm*(event.state/128.0)
+                        #print(lm, rm)
+                        rm = (128 - event.state) / 128
+                        lm = (event.state/128.0)*(128.0 - event.state) / 128
+
+
+                    else:   #analog to go right
+                        lm = (event.state-128) / 128
+                        rm = ((255-event.state) / 128.0) * (event.state-128) / 128
+
+                motor_values = [lm,rm]
+                #print("LM = " + str(lm) + ", RM = " + str(rm))
+                dataString = pickle.dumps(motor_values)
+                conn.send(dataString)
+
+            if exitFlag:
+                dataString = pickle.dumps([float('nan'),float('nan')])
+                conn.send(dataString)
+                break
+
+
+
+    else:
+        while True:
+            k = getch()
+
+            print("sending: " + str(k))
+            conn.send(k.encode())
+            print("Sent")
+
+            if k == 'q':
+                break;
 
     conn.close()
     mySocket.close()
