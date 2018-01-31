@@ -112,53 +112,78 @@ def Main():
         exitFlag = 0
         lm = 0
         rm = 0
+        norm_x = 0
+        norm_y = 0
 
         while True:
 
             events = get_gamepad()
-
-
+            i = 0
 
             for event in events:
 
                 #print("Event type = " + event.ev_type + ", Event code = " + event.code + ", Event state = " + str(event.state))
+
 
                 if event.code == 'MSC_SCAN' and event.state == 589836:
                     exitFlag = 1
                     break
 
                 if event.code == 'ABS_Y':
-                    if event.state < 128:  # moving forwards
-                        lm = (128 - event.state) / 128
-                        rm = (128 - event.state) / 128
-                        print(lm, rm)
-                    else:
-                        lm = -(event.state - 128) / 128
-                        rm = -(event.state - 128) / 128
+
+                    norm_y = -(event.state / 128) + 1
+
+                    #if event.state <= 128:  # moving forwards
+                        #lm = (128 - event.state) / 128
+                        #rm = (128 - event.state) / 128
+                    #else:
+                        #lm = -(event.state - 128) / 128
+                        #rm = -(event.state - 128) / 128
+
+                    forward_backward_motor = [lm, rm]
 
                 # Left/right movements override forward/backward movements
-                if event.code == 'ABS_X':
+
+                if event.code == 'ABS_RUDDER':
+
+                    norm_x = (event.state / 128) - 1
+                    '''
                     #print("Turning somewhere with event state=" + str(event.state))
-                    if event.state < 128:  # analog to go left
+                    if event.state <= 128:  # analog to go left
                         #lm = lm*(event.state/128.0)
                         #print(lm, rm)
-                        rm = (128 - event.state) / 128
-                        lm = (event.state/128.0)*(128.0 - event.state) / 128
+
+                        #rm = (128 - event.state) / 128
+                        #lm = (event.state/128.0)*(128.0 - event.state) / 128
+                        lm = lm * event.state / 128
 
 
                     else:   #analog to go right
-                        lm = (event.state-128) / 128
-                        rm = ((255-event.state) / 128.0) * (event.state-128) / 128
+                        #lm = (event.state-128) / 128
+                        #rm = ((255-event.state) / 128.0) * (event.state-128) / 128
+                        rm = rm * (255 - event.state) / 128
+                    '''
+
+
+                lm = norm_y
+                rm = norm_y
+                if norm_x < 0:
+                    lm = (norm_x + 1)*norm_y
+                elif norm_x > 0:
+                    rm = (norm_x - 1)*norm_y
 
                 motor_values = [lm,rm]
-                #print("LM = " + str(lm) + ", RM = " + str(rm))
+                print("LM = " + str(lm) + ", RM = " + str(rm))
                 dataString = pickle.dumps(motor_values)
                 conn.send(dataString)
 
+
+            print("Exit = " + str(exitFlag))
             if exitFlag:
-                dataString = pickle.dumps([float('nan'),float('nan')])
+                dataString = pickle.dumps([2,2])
                 conn.send(dataString)
                 break
+
 
 
 

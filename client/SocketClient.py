@@ -350,14 +350,17 @@ def Main():
         controllerThread.start()
         print("4 is chosen")
         while True:
-            k = mySocket.recv(2048)
-            newValues = pickle.loads(k)
+            try:
+                k = mySocket.recv(2048)
+                newValues = pickle.loads(k)
 
-            if math.isnan(newValues[0]):
-                break
-            lmv = int(newValues[0]*1000)
-            rmv = int(newValues[1]*1000)
-            changeMotorSpeed(lmv,rmv)
+                if newValues[0] == 2:
+                    break
+                lmv = int(newValues[0]*1000)
+                rmv = int(newValues[1]*1000)
+                changeMotorSpeed(lmv,rmv)
+            except:
+                continue
 
     # Cleaning up like closing socket and csv files after q is pressed.
     cleanup()
