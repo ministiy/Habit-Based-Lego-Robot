@@ -75,7 +75,8 @@ class DataManipulation:
 
     If there is no third dimension, it would just count until the second dimension.
     """
-    def convert_values_to_bins(self, firstDimension=None, secondDimension=None, thirdDimension=None):
+    def convert_values_to_bins(self, firstDimension=None, secondDimension=None, thirdDimension=None,
+                                fourthDimension=None, fifthDimension=None, sixthDimension=None):
         if self.__total is not 0:
             self.__total = 0
 
@@ -85,6 +86,12 @@ class DataManipulation:
             self.__total += self.__NUM_OF_BINS * secondDimension
         if thirdDimension is not None:
             self.__total += (self.__NUM_OF_BINS**2) * thirdDimension
+        if fourthDimension is not None:
+            self.__total += (self.__NUM_OF_BINS**3) * fourthDimension
+        if fifthDimension is not None:
+            self.__total += (self.__NUM_OF_BINS**4) * fifthDimension
+        if sixthDimension is not None:
+            self.__total += (self.__NUM_OF_BINS**5) * sixthDimension
 
         self.__total = np.floor(self.__total).astype(int)
         return self.__total
@@ -94,7 +101,10 @@ class DataManipulation:
     To remove where state goes to itself (e.g A A A A B will be reduced to A B)
     """
     def remove_continous_state(self):
-        return np.array([self.__total[i] for i in range(len(self.__total)-1) if self.__total[i] != self.__total[i+1]])
+        temp = [self.__total[i] for i in range(len(self.__total)-1) if self.__total[i] != self.__total[i+1]]
+        if temp[-1] != self.__total[-1]:
+            temp.append(self.__total[-1])
+        return np.array(temp)
 
     """Make a dictionary inside a dictionary from transition array without frequency
     
