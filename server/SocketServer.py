@@ -107,6 +107,7 @@ def Main():
     print("{0} is chosen, press q to quit".format(movementType))
     conn.send(str(movementType).encode())
 
+    #Condition to check if controller mode is selected
     if movementType == 4:
 
         exitFlag = 0
@@ -120,65 +121,40 @@ def Main():
             events = get_gamepad()
             i = 0
 
+            #Check for gamepad events
             for event in events:
 
-                #print("Event type = " + event.ev_type + ", Event code = " + event.code + ", Event state = " + str(event.state))
-
-
-                if event.code == 'MSC_SCAN' and event.state == 589836:
+                #If quit button is pressed ("analog" button in centre on Saitek P2600 Rumble controller)
+                if event.code == 'BTN_BASE6' and event.state == 1:
                     exitFlag = 1
                     break
 
+                #Left analog stick to control forward/backward movements
                 if event.code == 'ABS_Y':
-
                     norm_y = -(event.state / 128) + 1
 
-                    #if event.state <= 128:  # moving forwards
-                        #lm = (128 - event.state) / 128
-                        #rm = (128 - event.state) / 128
-                    #else:
-                        #lm = -(event.state - 128) / 128
-                        #rm = -(event.state - 128) / 128
-
-                    forward_backward_motor = [lm, rm]
-
-                # Left/right movements override forward/backward movements
-
+                #Right analog stick to control left/right turning
                 if event.code == 'ABS_RUDDER':
-
                     norm_x = (event.state / 128) - 1
-                    '''
-                    #print("Turning somewhere with event state=" + str(event.state))
-                    if event.state <= 128:  # analog to go left
-                        #lm = lm*(event.state/128.0)
-                        #print(lm, rm)
-
-                        #rm = (128 - event.state) / 128
-                        #lm = (event.state/128.0)*(128.0 - event.state) / 128
-                        lm = lm * event.state / 128
-
-
-                    else:   #analog to go right
-                        #lm = (event.state-128) / 128
-                        #rm = ((255-event.state) / 128.0) * (event.state-128) / 128
-                        rm = rm * (255 - event.state) / 128
-                    '''
-
 
                 lm = norm_y
                 rm = norm_y
+
+                #How fast the robot is turning left or right is based on how fast the robot is going
+                #(forward/backward speed)
                 if norm_x < 0:
                     lm = (norm_x + 1)*norm_y
                 elif norm_x > 0:
                     rm = (norm_x - 1)*norm_y
 
                 motor_values = [lm,rm]
-                print("LM = " + str(lm) + ", RM = " + str(rm))
+
+                #Send motor ratios to robot
                 dataString = pickle.dumps(motor_values)
                 conn.send(dataString)
 
 
-            print("Exit = " + str(exitFlag))
+            #Check if program has been quit
             if exitFlag:
                 dataString = pickle.dumps([2,2])
                 conn.send(dataString)
@@ -186,7 +162,7 @@ def Main():
 
 
 
-
+    #All other modes
     else:
         while True:
             k = getch()
