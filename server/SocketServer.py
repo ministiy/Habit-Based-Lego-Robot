@@ -103,7 +103,7 @@ def Main():
     # Robot controls on main thread
     # Starting the program on server side (and client side)
     print("Connection from: " + str(addr)) #Here is where we say "Connected to the EV3DEV robot"
-    movementType = int(input("1.Keyboard 2.Braitenburg 3.Random (Press q to quit after choosing)"))
+    movementType = int(input("1.Keyboard 2.Braitenburg 3.Random 4.Controller (Press q to quit after choosing): "))
     print("{0} is chosen, press q to quit".format(movementType))
     conn.send(str(movementType).encode())
 
