@@ -6,6 +6,7 @@ import threading
 import pickle
 from writeCSV import WriteCSV
 import Constant
+from inputs import get_gamepad
 
 # A thread class from https://www.tutorialspoint.com/python/python_multithreading.htm
 # This class represents a background thread used by the server to store collected data into a .csv file
@@ -102,19 +103,76 @@ def Main():
     # Robot controls on main thread
     # Starting the program on server side (and client side)
     print("Connection from: " + str(addr)) #Here is where we say "Connected to the EV3DEV robot"
-    movementType = int(input("1.Keyboard 2.Braitenburg 3.Random (Press q to quit after choosing)"))
+    movementType = int(input("1.Keyboard 2.Braitenburg 3.Random 4.Controller (Press q to quit after choosing): "))
     print("{0} is chosen, press q to quit".format(movementType))
     conn.send(str(movementType).encode())
 
-    while True:
-        k = getch()
+    #Condition to check if controller mode is selected
+    if movementType == 4:
 
-        print("sending: " + str(k))
-        conn.send(k.encode())
-        print("Sent")
+        exitFlag = 0
+        lm = 0
+        rm = 0
+        norm_x = 0
+        norm_y = 0
 
-        if k == 'q':
-            break;
+        while True:
+
+            events = get_gamepad()
+            i = 0
+
+            #Check for gamepad events
+            for event in events:
+
+                #If quit button is pressed ("analog" button in centre on Saitek P2600 Rumble controller)
+                if event.code == 'BTN_BASE6' and event.state == 1:
+                    exitFlag = 1
+                    break
+
+                #Left analog stick to control forward/backward movements
+                if event.code == 'ABS_Y':
+                    norm_y = -(event.state / 128) + 1
+
+                #Right analog stick to control left/right turning
+                if event.code == 'ABS_RUDDER':
+                    norm_x = (event.state / 128) - 1
+
+                lm = norm_y
+                rm = norm_y
+
+                #How fast the robot is turning left or right is based on how fast the robot is going
+                #(forward/backward speed)
+                if norm_x < 0:
+                    lm = (norm_x + 1)*norm_y
+                elif norm_x > 0:
+                    rm = (norm_x - 1)*norm_y
+
+                motor_values = [lm,rm]
+
+                #Send motor ratios to robot
+                dataString = pickle.dumps(motor_values)
+                conn.send(dataString)
+
+
+            #Check if program has been quit
+            if exitFlag:
+                dataString = pickle.dumps([2,2])
+                conn.send(dataString)
+                break
+
+
+
+    #All other modes
+    else:
+        while True:
+            k = getch()
+
+            print("sending: " + str(k))
+            conn.send(k.encode())
+            print("Sent")
+
+            if k == 'q':
+                break;
 
     conn.close()
     mySocket.close()
