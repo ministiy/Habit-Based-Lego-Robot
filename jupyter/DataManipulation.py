@@ -100,11 +100,19 @@ class DataManipulation:
         
     To remove where state goes to itself (e.g A A A A B will be reduced to A B)
     """
-    def remove_continous_state(self):
-        temp = [self.__total[i] for i in range(len(self.__total)-1) if self.__total[i] != self.__total[i+1]]
-        if temp[-1] != self.__total[-1]:
-            temp.append(self.__total[-1])
-        return np.array(temp)
+    def remove_continous_state(self, arr=None):
+        if arr is None:
+            temp = [self.__total[i] for i in range(len(self.__total)-1) if self.__total[i] != self.__total[i+1]]
+            if temp[-1] != self.__total[-1]:
+                temp.append(self.__total[-1])
+            return np.array(temp)
+        else:
+            temp = [arr[i] for i in range(len(arr)-1) if arr[i] != arr[i+1]]
+            if len(temp) == 0:
+                temp.append(arr[-1])
+            elif temp[-1] != arr[-1]:
+                temp.append(arr[-1])
+            return np.array(temp)
 
     """Make a dictionary inside a dictionary from transition array without frequency
     
