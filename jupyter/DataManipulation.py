@@ -8,7 +8,7 @@ class DataManipulation:
 
     def __init__(self, filename):
         self.__data = pd.read_csv(filename)
-        self.__NUM_OF_BINS = 20
+        self.__NUM_OF_BINS = 10
         self.__total = 0
         self.__total_motor = None
         self.__total_sensor = None
@@ -103,7 +103,9 @@ class DataManipulation:
     def remove_continous_state(self, arr=None):
         if arr is None:
             temp = [self.__total[i] for i in range(len(self.__total)-1) if self.__total[i] != self.__total[i+1]]
-            if temp[-1] != self.__total[-1]:
+            if len(temp) == 0:
+                temp.append(self.__total[-1])
+            elif temp[-1] != self.__total[-1]:
                 temp.append(self.__total[-1])
             return np.array(temp)
         else:
