@@ -113,6 +113,7 @@ class DataManipulation:
     To remove where state goes to itself (e.g A A A A B will be reduced to A B)
     """
     def remove_continous_state(self, arr=None):
+        # Check if argument any array is passed, if None, remove continous state of total value
         if arr is None:
             temp = [self.__total[i] for i in range(len(self.__total)-1) if self.__total[i] != self.__total[i+1]]
             if len(temp) == 0:
@@ -120,6 +121,7 @@ class DataManipulation:
             elif temp[-1] != self.__total[-1]:
                 temp.append(self.__total[-1])
             return np.array(temp)
+        # if there are array, remove continous state of the argument
         else:
             temp = [arr[i] for i in range(len(arr)-1) if arr[i] != arr[i+1]]
             if len(temp) == 0:
